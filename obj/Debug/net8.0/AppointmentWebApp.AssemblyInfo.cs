@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AppointmentWebApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d161e1a03f91c0bf6855317ccad70c79cdf2573d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a876bc3912fe3ef7fd452a120c85cadfc86b6238")]
 [assembly: System.Reflection.AssemblyProductAttribute("AppointmentWebApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AppointmentWebApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
