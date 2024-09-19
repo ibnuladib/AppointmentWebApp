@@ -41,3 +41,7 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+
+
+## ignore the appsettings.json file
+appsettings.json
