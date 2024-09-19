@@ -1,5 +1,6 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "/OM2Ev5FBiA=",
   "success": true,
   "projectFilePath": "C:\\Users\\adib\\Documents\\GitHub\\AppointmentWebApp\\AppointmentWebApp.csproj",
@@ -172,5 +173,11 @@
     "C:\\Users\\adib\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\adib\\.nuget\\packages\\system.windows.extensions\\7.0.0\\system.windows.extensions.7.0.0.nupkg.sha512"
   ],
+=======
+  "dgSpecHash": "JGKiWkJtREE=",
+  "success": true,
+  "projectFilePath": "E:\\gitDocs\\AppointmentWebApp\\AppointmentWebApp.csproj",
+  "expectedPackageFiles": [],
+>>>>>>> main
   "logs": []
 }

@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\adib\\Documents\\GitHub\\AppointmentWebApp\\AppointmentWebApp.csproj": {}
   },
   "projects": {
@@ -12,9 +13,22 @@
         "projectPath": "C:\\Users\\adib\\Documents\\GitHub\\AppointmentWebApp\\AppointmentWebApp.csproj",
         "packagesPath": "C:\\Users\\adib\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\adib\\Documents\\GitHub\\AppointmentWebApp\\obj\\",
+=======
+    "E:\\gitDocs\\AppointmentWebApp\\AppointmentWebApp.csproj": {}
+  },
+  "projects": {
+    "E:\\gitDocs\\AppointmentWebApp\\AppointmentWebApp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\gitDocs\\AppointmentWebApp\\AppointmentWebApp.csproj",
+        "projectName": "AppointmentWebApp",
+        "projectPath": "E:\\gitDocs\\AppointmentWebApp\\AppointmentWebApp.csproj",
+        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+        "outputPath": "E:\\gitDocs\\AppointmentWebApp\\obj\\",
+>>>>>>> main
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\adib\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -88,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
