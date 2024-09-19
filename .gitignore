@@ -22,3 +22,10 @@ Version.cpp
 */**/obj/Release
 ## ignore the appsettings.json file
 appsettings.json
+/appsettings.json
+
+/Migrations/20240919150857_Initial Create.cs
+/Migrations/20240919152335_Application user.cs
+/Migrations/20240919200657_db creation.cs
+/Migrations/20240919201156_db.cs
+/Migrations/20240919201717_new db.cs
