@@ -1,6 +1,19 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
+    "C:\\Users\\adib\\Documents\\GitHub\\AppointmentWebApp\\AppointmentWebApp.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\adib\\Documents\\GitHub\\AppointmentWebApp\\AppointmentWebApp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\adib\\Documents\\GitHub\\AppointmentWebApp\\AppointmentWebApp.csproj",
+        "projectName": "AppointmentWebApp",
+        "projectPath": "C:\\Users\\adib\\Documents\\GitHub\\AppointmentWebApp\\AppointmentWebApp.csproj",
+        "packagesPath": "C:\\Users\\adib\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\adib\\Documents\\GitHub\\AppointmentWebApp\\obj\\",
+=======
     "E:\\gitDocs\\AppointmentWebApp\\AppointmentWebApp.csproj": {}
   },
   "projects": {
@@ -12,6 +25,7 @@
         "projectPath": "E:\\gitDocs\\AppointmentWebApp\\AppointmentWebApp.csproj",
         "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
         "outputPath": "E:\\gitDocs\\AppointmentWebApp\\obj\\",
+>>>>>>> main
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -45,6 +59,30 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.AspNetCore.Identity.UI": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[8.0.5, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
