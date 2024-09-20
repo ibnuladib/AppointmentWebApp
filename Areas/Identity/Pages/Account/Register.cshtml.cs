@@ -46,60 +46,96 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [ProtectedPersonalData]
+            [StringLength(11, ErrorMessage = "It needs to be 11 digits", MinimumLength = 11)]
+            [Display(Name = "Phone Number")]
+            public virtual string PhoneNumber { get; set; }
+
+            [Required]
+            [Display(Name = "Date of Birth")]
+            public DateTime DateofBirth { get; set; }
+
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [Required]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-        }
 
+            [Display(Name = "Qualification")]
+            [Required(ErrorMessage = "Qualification is required.")]
+            public string Qualification { get; set; }
+
+            [Display(Name = "Specialization")]
+            [Required(ErrorMessage = "Specialization is required.")]
+            public string Specialization { get; set; }
+
+            [Display(Name = "Years of Experience")]
+            [Required(ErrorMessage = "Years of Experience is required.")]
+            public int YearsOfExperience { get; set; }
+
+            [Display(Name = "Consultation Fees (Per Hour)")]
+            [Range(0, double.MaxValue, ErrorMessage = "Please enter a valid amount")]
+            public decimal ConsultationFeesPerHour { get; set; }
+
+            [Display(Name = "Medical License Number")]
+            [Required(ErrorMessage = "Medical License Number is required.")]
+            public string MedicalLicenseNumber { get; set; }
+
+            [Display(Name = "Gender")]
+            [Required(ErrorMessage = "Gender is required")]
+            public string Gender { get; set; } // Assume values will be "Male" or "Female"
+
+            [Display(Name = "Medical History")]
+            [Required(ErrorMessage = "Medical History is required.")]
+            public string MedicalHistory { get; set; }
+
+            [Display(Name = "Blood Group")]
+            [Required(ErrorMessage = "Blood Group is required.")]
+            public string BloodGroup { get; set; }
+
+            [Display(Name = "Insurace Details")]
+            [Required(ErrorMessage = "Insurance Details is required.")]
+            public string InsuranceDetails { get; set; }
+
+            [Display(Name = "Address")]
+            [Required(ErrorMessage = "Address is required")]
+            public string Address { get; set; }
+
+            [Display(Name = "Visiting Time Start Hour")]
+            [Required(ErrorMessage = "Start Hour is required.")]
+            public int VisitingTimeStartHour { get; set; }
+
+            [Display(Name = "Visiting Time End Hour")]
+            [Required(ErrorMessage = "End Hour is required.")]
+            public int VisitingTimeEndHour { get; set; }
+        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -107,20 +143,48 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string role = "Patient")
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                var user = new ApplicationUser
+                {
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    PhoneNumber = Input.PhoneNumber,
+                    DateOfBirth = Input.DateofBirth,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    Address = Input.Address,
+                    Gender = Input.Gender
+                };
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                // Assign fields based on role
+                if (role == "Doctor")
+                {
+                    user.Qualification = Input.Qualification;
+                    user.Specialization = Input.Specialization;
+                    user.YearsOfExperience = Input.YearsOfExperience;
+                    user.ConsultationFeesPerHour = Input.ConsultationFeesPerHour;
+                    user.MedicalLicenseNumber = Input.MedicalLicenseNumber;
+                    user.VisitingTimeStart = new DateTime(1, 1, 1, Input.VisitingTimeStartHour, 0, 0); // Hour only
+                    user.VisitingTimeEnd = new DateTime(1, 1, 1, Input.VisitingTimeEndHour, 0, 0); // Hour only
+                }
+                else if (role == "Patient")
+                {
+                    user.MedicalHistory = Input.MedicalHistory;
+                    user.BloodGroup = Input.BloodGroup;
+                    user.InsuranceDetails = Input.InsuranceDetails;
+                }
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, role);
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -155,7 +219,7 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private ApplicationUser CreateUser()
+        private IdentityUser CreateUser()
         {
             try
             {
