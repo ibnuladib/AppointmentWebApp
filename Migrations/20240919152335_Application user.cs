@@ -5,7 +5,8 @@
 namespace AppointmentWebApp.Migrations
 {
     /// <inheritdoc />
-    public partial class Applicationuser : Migration
+    public partial class Applicationuser
+        : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -14,6 +14,7 @@ namespace AppointmentWebApp.Migrations
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240919152335_Application user")]
     partial class Applicationuser
+
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

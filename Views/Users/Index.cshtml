@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<ApplicationUser>
+
+<h2>@ViewBag.Role Users</h2>
+
+<a href="@Url.Action("Doctors", "Users")" class="btn btn-primary">Show Doctors</a>
+<a href="@Url.Action("Patients", "Users")" class="btn btn-primary">Show Patients</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>UserName</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.UserName</td>
+            </tr>
+        }
+    </tbody>
+</table>

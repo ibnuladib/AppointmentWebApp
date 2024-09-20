@@ -2,7 +2,37 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+
 </div>
+
+<style>
+    .bg-dark-50 {
+        background-color: #6c757d; /* Custom medium gray */
+    }
+
+    .bg-dark-75 {
+        background-color: #343a40; /* Custom dark gray */
+    }
+
+    .bg-dark-80 {
+        background-color: dimgray; /* Custom dark gray */
+    }
+
+    .bg-dark-85 {
+        background-color: lightslategrey; /* Custom dark gray */
+    }
+
+    .card {
+        cursor: pointer;
+        transition: transform 0.3s; /* Smooth transition */
+    }
+
+        .card:hover {
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+
+    .card-title {
+        margin: 0;
+    }
+</style>

@@ -1,0 +1,93 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Search Doctors";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-controller="Search" asp-action="Index" method="get">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="searchString" id="searchBox" placeholder="Search by ID, Name, Username, or Email" autocomplete="off" />
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+</form>
+
+<div id="suggestions" class="list-group"></div>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <!-- Add more columns if needed -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr class="clickable-row" data-id="@user.Id">
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <!-- Add more columns if needed -->
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No doctors found.</p>
+}
+<style>
+    <style >
+    .clickable-row {
+        cursor: pointer;
+    }
+</style>
+</style>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle search box input and suggestions
+            $('#searchBox').on('input', function () {
+                var query = $(this).val();
+                if (query.length > 1) {
+                    $.ajax({
+                        url: '@Url.Action("GetSuggestions", "Search")',
+                        data: { query: query },
+                        success: function (data) {
+                            var suggestionsList = $('#suggestions');
+                            suggestionsList.empty();
+                            data.forEach(function (suggestion) {
+                                var suggestionItem = '<a href="#" class="list-group-item list-group-item-action" data-id="' + suggestion.id + '">' + suggestion.name + '</a>';
+                                suggestionsList.append(suggestionItem);
+                            });
+                        }
+                    });
+                } else {
+                    $('#suggestions').empty();
+                }
+            });
+
+            // Handle suggestion click event
+            $(document).on('click', '.list-group-item', function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                window.location.href = '@Url.Action("UserDetails", "Users")' + '?id=' + id;
+            });
+
+            // Handle table row click event
+            $('.clickable-row').on('click', function () {
+                var id = $(this).data('id');
+                window.location.href = '@Url.Action("UserDetails", "Users")' + '?id=' + id;
+            });
+        });
+    </script>
+}
