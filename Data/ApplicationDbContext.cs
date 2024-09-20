@@ -12,9 +12,54 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        base.OnModelCreating(builder);
+    public DbSet<Appointment> Appointments { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<Review> Reviews { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Configure the one-to-one relationship between Appointment and Transaction
+        modelBuilder.Entity<Appointment>()
+                .HasOne<Transaction>()
+                .WithOne(t => t.Appointment)
+                .HasForeignKey<Transaction>(t => t.AppointmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+        // Configure the one-to-one relationship for Patient
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Patient)
+            .WithMany()  // Each ApplicationUser will have many appointments
+            .HasForeignKey(a => a.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Configure the one-to-one relationship for Doctor
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Doctor)
+            .WithMany()  // Each ApplicationUser will have many appointments
+            .HasForeignKey(a => a.DoctorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Review>()
+            .HasKey(r => r.ReviewId);
+
+        // Enforce that a patient can only leave one review per doctor
+        modelBuilder.Entity<Review>()
+            .HasIndex(r => new { r.PatientId, r.DoctorId })
+            .IsUnique();  // Ensures unique review per patient-doctor pair
+
+        // Configure foreign keys
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.Patient)
+            .WithMany()  // Each patient can leave multiple reviews (but one per doctor)
+            .HasForeignKey(r => r.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.Doctor)
+            .WithMany()  // Each doctor can have many reviews
+            .HasForeignKey(r => r.DoctorId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

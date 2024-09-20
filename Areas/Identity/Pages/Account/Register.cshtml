@@ -1,67 +1,253 @@
 ﻿@page
-@model RegisterModel
+@model AppointmentWebApp.Areas.Identity.Pages.Account.RegisterModel
 @{
     ViewData["Title"] = "Register";
+    var role = Request.Query["role"].ToString();
+
+    if (string.IsNullOrEmpty(role))
+    {
+        role = "Patient";
+    }
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card mt-5 ">
+            <div class="card-header text-center">
+                <ul class="nav nav-tabs card-header-tabs justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link @(role == "Doctor" ? "active" : "")" href="@Url.Page("./Register", new { role = "Doctor", returnUrl = Model.ReturnUrl })"><strong>Register as Doctor</strong></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(role == "Patient" ? "active" : "")" href="@Url.Page("./Register", new { role = "Patient", returnUrl = Model.ReturnUrl })"><strong>Register as Patient</strong></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title text-center ">@("Create a new " + role + " Account")</h4>
+                <hr />
 
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                @if (role == "Doctor")
                 {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <input type="hidden" name="role" value="@role" />
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.FirstName" class="form-control" aria-required="true" placeholder="First Name" />
+                                    <label asp-for="Input.FirstName">First Name</label>
+                                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.LastName" class="form-control" aria-required="true" placeholder="Last Name" />
+                                    <label asp-for="Input.LastName">Last Name</label>
+                                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                                </div>
+                            </div>
                         </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label asp-for="Input.Email">Email</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.DateofBirth" class="form-control" type="date" aria-required="true" placeholder="Date of Birth" />
+                                    <label asp-for="Input.DateofBirth">Date of Birth</label>
+                                    <span asp-validation-for="Input.DateofBirth" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="XXXXXXXXXXX" />
+                                    <label asp-for="Input.PhoneNumber">Phone Number</label>
+                                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Input.Gender" class="form-select">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                    <label asp-for="Input.Gender">Gender</label>
+                                    <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.Address" class="form-control" placeholder="Address" />
+                                    <label asp-for="Input.Address">Address</label>
+                                    <span asp-validation-for="Input.Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Qualification" class="form-control" placeholder="Qualification" />
+                            <label asp-for="Input.Qualification">Qualification</label>
+                            <span asp-validation-for="Input.Qualification" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Specialization" class="form-control" placeholder="Specialization" />
+                            <label asp-for="Input.Specialization">Specialization</label>
+                            <span asp-validation-for="Input.Specialization" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.YearsOfExperience" class="form-control" placeholder="Years of Experience" />
+                            <label asp-for="Input.YearsOfExperience">Years of Experience</label>
+                            <span asp-validation-for="Input.YearsOfExperience" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.ConsultationFeesPerHour" class="form-control" placeholder="Consultation Fees" />
+                            <label asp-for="Input.ConsultationFeesPerHour">Consultation Fees</label>
+                            <span asp-validation-for="Input.ConsultationFeesPerHour" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.MedicalLicenseNumber" class="form-control" placeholder="Medical License Number" />
+                            <label asp-for="Input.MedicalLicenseNumber">Medical License Number</label>
+                            <span asp-validation-for="Input.MedicalLicenseNumber" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Password" />
+                            <label asp-for="Input.Password">Password</label>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Confirm Password" />
+                            <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
                     </form>
                 }
-            }
-        </section>
+                else if (role == "Patient")
+                {
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <input type="hidden" name="role" value="@role" />
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.FirstName" class="form-control" aria-required="true" placeholder="First Name" />
+                                    <label asp-for="Input.FirstName">First Name</label>
+                                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.LastName" class="form-control" aria-required="true" placeholder="Last Name" />
+                                    <label asp-for="Input.LastName">Last Name</label>
+                                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label asp-for="Input.Email">Email</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.DateofBirth" class="form-control" type="date" aria-required="true" placeholder="Date of Birth" />
+                                    <label asp-for="Input.DateofBirth">Date of Birth</label>
+                                    <span asp-validation-for="Input.DateofBirth" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="XXXXXXXXXXX" />
+                                    <label asp-for="Input.PhoneNumber">Phone Number</label>
+                                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Input.Gender" class="form-select">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                    <label asp-for="Input.Gender">Gender</label>
+                                    <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.Address" class="form-control" placeholder="Address" />
+                                    <label asp-for="Input.Address">Address</label>
+                                    <span asp-validation-for="Input.Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <div class="form-floating">
+                                        <input asp-for="Input.InsuranceDetails" class="form-control" placeholder="Insurance Details" />
+                                        <label asp-for="Input.InsuranceDetails">Insurance Details</label>
+                                        <span asp-validation-for="Input.InsuranceDetails" class="text-danger"></span>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Input.BloodGroup" class="form-control" placeholder="Blood Group" />
+                                    <label asp-for="Input.BloodGroup">Blood Group</label>
+                                    <span asp-validation-for="Input.BloodGroup" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.MedicalHistory" class="form-control" placeholder="MedicalHistory" />
+                            <label asp-for="Input.MedicalHistory">Medical History</label>
+                            <span asp-validation-for="Input.MedicalHistory" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Password" />
+                            <label asp-for="Input.Password">Password</label>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Confirm Password" />
+                            <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+
+                        <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                    </form>
+                }
+            </div>
+        </div>
     </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
