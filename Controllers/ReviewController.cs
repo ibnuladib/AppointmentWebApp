@@ -30,5 +30,6 @@ namespace AppointmentWebApp.Controllers
 
             return Json(new { success = false, message = "Error submitting review." });
         }
+
     }
 }

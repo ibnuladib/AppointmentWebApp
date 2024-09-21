@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@model ApplicationUser
+@inject UserManager<ApplicationUser> UserManager
+
+@if ((User.IsInRole("Doctor"))||(User.IsInRole("Patient"))||(User.IsInRole("Admin")))
+{
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -137,3 +143,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+}
