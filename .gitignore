@@ -20,5 +20,5 @@ Version.cpp
 */**/bin/Release
 */**/obj/Debug
 */**/obj/Release
-## ignore the appsettings.json file
-appsettings.json
+
+Migrations/*
