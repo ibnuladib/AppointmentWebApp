@@ -1,38 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = null;
 }
 
-<div class="container mt-5">
+<h1>Landing Page</h1>
 
-</div>
+<p>If you have an account, please <a href="@Url.Page("/Account/Login", new { area = "Identity" })">log in</a> to access more features.</p>
 
-<style>
-    .bg-dark-50 {
-        background-color: #6c757d; /* Custom medium gray */
-    }
-
-    .bg-dark-75 {
-        background-color: #343a40; /* Custom dark gray */
-    }
-
-    .bg-dark-80 {
-        background-color: dimgray; /* Custom dark gray */
-    }
-
-    .bg-dark-85 {
-        background-color: lightslategrey; /* Custom dark gray */
-    }
-
-    .card {
-        cursor: pointer;
-        transition: transform 0.3s; /* Smooth transition */
-    }
-
-        .card:hover {
-            transform: scale(1.05); /* Slightly enlarge on hover */
-        }
-
-    .card-title {
-        margin: 0;
-    }
-</style>

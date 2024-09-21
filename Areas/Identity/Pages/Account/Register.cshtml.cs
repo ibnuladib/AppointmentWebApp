@@ -60,21 +60,17 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
             [ProtectedPersonalData]
             [StringLength(11, ErrorMessage = "It needs to be 11 digits", MinimumLength = 11)]
             [Display(Name = "Phone Number")]
             public virtual string PhoneNumber { get; set; }
 
-            [Required]
             [Display(Name = "Date of Birth")]
             public DateTime DateofBirth { get; set; }
 
-            [Required]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
 
-            [Required]
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
 
@@ -89,15 +85,15 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [Display(Name = "Qualification")]
-            [Required(ErrorMessage = "Qualification is required.")]
+            //[Required(ErrorMessage = "Qualification is required.")]
             public string Qualification { get; set; }
 
             [Display(Name = "Specialization")]
-            [Required(ErrorMessage = "Specialization is required.")]
+           // [Required(ErrorMessage = "Specialization is required.")]
             public string Specialization { get; set; }
 
             [Display(Name = "Years of Experience")]
-            [Required(ErrorMessage = "Years of Experience is required.")]
+            //[Required(ErrorMessage = "Years of Experience is required.")]
             public int YearsOfExperience { get; set; }
 
             [Display(Name = "Consultation Fees (Per Hour)")]
@@ -105,35 +101,35 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             public decimal ConsultationFeesPerHour { get; set; }
 
             [Display(Name = "Medical License Number")]
-            [Required(ErrorMessage = "Medical License Number is required.")]
+            //[Required(ErrorMessage = "Medical License Number is required.")]
             public string MedicalLicenseNumber { get; set; }
 
             [Display(Name = "Gender")]
-            [Required(ErrorMessage = "Gender is required")]
+            //[Required(ErrorMessage = "Gender is required")]
             public string Gender { get; set; } // Assume values will be "Male" or "Female"
 
             [Display(Name = "Medical History")]
-            [Required(ErrorMessage = "Medical History is required.")]
+            //[Required(ErrorMessage = "Medical History is required.")]
             public string MedicalHistory { get; set; }
 
             [Display(Name = "Blood Group")]
-            [Required(ErrorMessage = "Blood Group is required.")]
+           // [Required(ErrorMessage = "Blood Group is required.")]
             public string BloodGroup { get; set; }
 
             [Display(Name = "Insurace Details")]
-            [Required(ErrorMessage = "Insurance Details is required.")]
+          //  [Required(ErrorMessage = "Insurance Details is required.")]
             public string InsuranceDetails { get; set; }
 
             [Display(Name = "Address")]
-            [Required(ErrorMessage = "Address is required")]
+           // [Required(ErrorMessage = "Address is required")]
             public string Address { get; set; }
 
             [Display(Name = "Visiting Time Start Hour")]
-            [Required(ErrorMessage = "Start Hour is required.")]
+          //  [Required(ErrorMessage = "Start Hour is required.")]
             public int VisitingTimeStartHour { get; set; }
 
             [Display(Name = "Visiting Time End Hour")]
-            [Required(ErrorMessage = "End Hour is required.")]
+           // [Required(ErrorMessage = "End Hour is required.")]
             public int VisitingTimeEndHour { get; set; }
         }
 
@@ -143,9 +139,10 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string role = "Patient")
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
+            var role = Request.Form["role"].ToString();
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
@@ -170,8 +167,8 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
                     user.YearsOfExperience = Input.YearsOfExperience;
                     user.ConsultationFeesPerHour = Input.ConsultationFeesPerHour;
                     user.MedicalLicenseNumber = Input.MedicalLicenseNumber;
-                    user.VisitingTimeStart = new DateTime(1, 1, 1, Input.VisitingTimeStartHour, 0, 0); // Hour only
-                    user.VisitingTimeEnd = new DateTime(1, 1, 1, Input.VisitingTimeEndHour, 0, 0); // Hour only
+                    //user.VisitingTimeStart = new DateTime(1, 1, 1, Input.VisitingTimeStartHour, 0, 0); // Hour only
+                    //user.VisitingTimeEnd = new DateTime(1, 1, 1, Input.VisitingTimeEndHour, 0, 0); // Hour only
                 }
                 else if (role == "Patient")
                 {
@@ -182,37 +179,58 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
+                /*                if (result.Succeeded)
+                                {
+                                    await _userManager.AddToRoleAsync(user, role);
+                                    _logger.LogInformation("User created a new account with password.");
+
+                                    var userId = await _userManager.GetUserIdAsync(user);
+                                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                                    var callbackUrl = Url.Page(
+                                        "/Account/ConfirmEmail",
+                                        pageHandler: null,
+                                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                                        protocol: Request.Scheme);
+
+                                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                                    {
+                                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                                    }
+                                    else
+                                    {
+                                        await _signInManager.SignInAsync(user, isPersistent: false);
+                                        return LocalRedirect(returnUrl);
+                                    }
+                                }*/
                 if (result.Succeeded)
                 {
+                    // Mark the email as confirmed
+                    user.EmailConfirmed = true;
+                    await _userManager.UpdateAsync(user);
+
                     await _userManager.AddToRoleAsync(user, role);
                     _logger.LogInformation("User created a new account with password.");
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    // Automatically sign in the user
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
+                }
+                else
+                {
+                    _logger.LogInformation("User cannot be created");
                 }
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+            }
+            else
+            {
+                _logger.LogInformation("Model Invalid");
             }
 
             // If we got this far, something failed, redisplay form

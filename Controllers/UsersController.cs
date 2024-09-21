@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace AppointmentWebApp.Controllers
 {
 
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class UsersController : Controller
     {
 
