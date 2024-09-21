@@ -1,13 +1,21 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model ApplicationUser
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "User Details";
+    var doctorId = Model.Id; // Doctor's ID shown on the page
+    var patientId = UserManager.GetUserId(User); // Logged-in user's ID
 }
 
 <div class="container mt-5">
-    <h1>@ViewData["Title"]</h1>
-
+    @if(User.IsInRole("Patient")){
+        <h1>@ViewData["Doctor Details"]</h1>
+    }
+    else
+    {
+        <h1>@ViewData["User Details"]</h1>
+    }
     <div class="card">
         <div class="card-header">
             User Details
@@ -15,7 +23,7 @@
         <div class="card-body">
             <dl class="row">
                 <dt class="col-sm-3">ID</dt>
-                <dd class="col-sm-9">@Model.Id</dd>
+                <dd class="col-sm-9">@doctorId</dd>
 
                 <dt class="col-sm-3">Username</dt>
                 <dd class="col-sm-9">@Model.UserName</dd>
@@ -24,11 +32,147 @@
                 <dd class="col-sm-9">@Model.Email</dd>
 
                 <dt class="col-sm-3">Name</dt>
-                <dd class="col-sm-9">@Model.FirstName.ToString() @Model.LastName.ToString()</dd>
-                
+                <dd class="col-sm-9">@Model.FirstName @Model.LastName</dd>
             </dl>
         </div>
     </div>
 
+    <button class="btn btn-primary mt-3 custom-margin-right" id="rateDoctorBtn">Rate Doctor</button>
+
     <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3">Back to List</a>
 </div>
+    <div id="ratingForm" class="mt-4 p-4 border rounded" style="display: none;">
+        <h3 class="text-lg font-semibold mb-2">Rate Doctor</h3>
+        <div id="starRating" class="flex mb-2">
+        </div>
+        <input type="text" id="commentInput" class="form-control mb-2" placeholder="Leave a comment">
+        <button id="submitRatingBtn" class="btn btn-primary">Submit</button>
+    </div>
+
+    <div id="messageAlert" class="alert alert-info mt-10" style="display: none;"></div>
+</div>
+
+<script>
+    const doctorRatingComponent = (() => {
+        const doctorId = '@doctorId'; 
+        const patientId = '@patientId'; 
+        let selectedRating = 0;
+
+        const rateDoctorBtn = document.getElementById('rateDoctorBtn');
+        const ratingForm = document.getElementById('ratingForm');
+        const starRating = document.getElementById('starRating');
+        const commentInput = document.getElementById('commentInput');
+        const submitRatingBtn = document.getElementById('submitRatingBtn');
+        const messageAlert = document.getElementById('messageAlert');
+
+        function init() {
+            createStars();
+            attachEventListeners();
+        }
+
+        function createStars() {
+            for (let i = 1; i <= 5; i += 1) {
+                const star = document.createElement('span');
+                star.innerHTML = '&#9733;'; 
+                star.className = 'star';
+                star.style.fontSize = '24px';
+                star.style.color = 'gray';
+                star.style.cursor = 'pointer';
+                star.dataset.value = i;
+                starRating.appendChild(star);
+            }
+        }
+
+        function attachEventListeners() {
+            rateDoctorBtn.addEventListener('click', toggleRatingForm);
+            starRating.addEventListener('click', handleStarClick);
+            submitRatingBtn.addEventListener('click', submitRating);
+        }
+
+        function toggleRatingForm() {
+            ratingForm.style.display = ratingForm.style.display === 'none' ? 'block' : 'none';
+            rateDoctorBtn.textContent = ratingForm.style.display === 'none' ? 'Rate Doctor' : 'Cancel';
+        }
+
+        function handleStarClick(event) {
+            if (event.target.classList.contains('star')) {
+                selectedRating = parseFloat(event.target.dataset.value);
+                updateStars();
+            }
+        }
+
+        function updateStars() {
+            starRating.querySelectorAll('.star').forEach(star => {
+                star.style.color = parseFloat(star.dataset.value) <= selectedRating ? 'gold' : 'gray';
+            });
+        }
+
+        function submitRating() {
+            if (selectedRating === 0) {
+                showMessage('Please select a rating.', 'alert-warning');
+                return;
+            }
+
+            const review = {
+                DoctorId: doctorId,
+                PatientId: patientId,
+                Rating: selectedRating,
+                Comment: commentInput.value
+            };
+
+            // Replace with your actual API endpoint
+            fetch('/Review/Create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(review)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage('Thank you for your review!', 'alert-success');
+                        resetForm();
+                    } else {
+                        showMessage('Error submitting review: ' + data.message, 'alert-danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting review:', error);
+                    showMessage('Error submitting your review. Please try again.', 'alert-danger');
+                });
+        }
+
+        function showMessage(message, className) {
+            messageAlert.textContent = message;
+            messageAlert.className = `alert ${className} mt-2`;
+            messageAlert.style.display = 'block';
+        }
+
+        function resetForm() {
+            selectedRating = 0;
+            updateStars();
+            commentInput.value = '';
+            toggleRatingForm();
+        }
+
+        return { init };
+    })();
+
+    document.addEventListener('DOMContentLoaded', doctorRatingComponent.init);
+</script>
+
+<style>
+    .star {
+        transition: color 0.2s;
+    }
+
+        .star:hover {
+            color: gold;
+        }
+
+    .custom-margin-right {
+        margin-right: 15px; /* Adjust the value as needed */
+    }
+</style>
