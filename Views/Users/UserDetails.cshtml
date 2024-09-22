@@ -3,55 +3,118 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "User Details";
+    ViewData["Title"] = "Details";
     var doctorId = Model.Id; // Doctor's ID shown on the page
     var patientId = UserManager.GetUserId(User); // Logged-in user's ID
 }
 
-<div class="container mt-5">
-    @if(User.IsInRole("Patient")){
-        <h1>@ViewData["Doctor Details"]</h1>
+@if ((User.IsInRole("Patient"))||(!User.Identity.IsAuthenticated))
+    {
+    <div class="container mt-5">
+
+        <div class="card">
+            <div class="card-header">
+                Doctor Details
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">ID</dt>
+                    <dd class="col-sm-9">@doctorId</dd>
+
+                    <dt class="col-sm-3">Username</dt>
+                    <dd class="col-sm-9">@Model.UserName</dd>
+
+                    <dt class="col-sm-3">Email</dt>
+                    <dd class="col-sm-9">@Model.Email</dd>
+
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.FirstName @Model.LastName</dd>
+
+                    <dt class="col-sm-3">Average Rating</dt>
+                    <dd class="col-sm-9">@Model.AverageRating</dd>
+                </dl>
+            </div>
+        </div>  
+
+        <button class="btn btn-primary mt-3 custom-margin-right" id="rateDoctorBtn">Rate Doctor</button>
+
+        <button class="btn btn-primary mt-3 custom margin-right" onclick="toggleViewComment('@doctorId')">View Comments</button>
+        <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3">Back to List</a>
+
+    </div>
+        <div id="ratingForm" class="mt-4 p-4 border rounded" style="display: none;">
+            <h3 class="text-lg font-semibold mb-2">Rate Doctor</h3>
+            <div id="starRating" class="flex mb-2">
+            </div>
+            <input type="text" id="commentInput" class="form-control mb-2" placeholder="Leave a comment">
+            <button id="submitRatingBtn" class="btn btn-primary">Submit</button>
+        </div>
+    <div id="viewComment" class="mt-4 p-4 border rounded" style="display: none;">
+        <h3 class="text-lg font-semibold mb-2">Recent Comments</h3>
+        <div id="commentContent"></div>
+    </div>
+
+        <div id="messageAlert" class="alert alert-info mt-10" style="display: none;"></div>
+
     }
     else
     {
-        <h1>@ViewData["User Details"]</h1>
+        <div class="container mt-5">
+
+            <div class="card">
+                <div class="card-header">
+                    User Details
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">ID</dt>
+                        <dd class="col-sm-9">@doctorId</dd>
+
+                        <dt class="col-sm-3">Username</dt>
+                        <dd class="col-sm-9">@Model.UserName</dd>
+
+                        <dt class="col-sm-3">Email</dt>
+                        <dd class="col-sm-9">@Model.Email</dd>
+
+                        <dt class="col-sm-3">Name</dt>
+                        <dd class="col-sm-9">@Model.FirstName @Model.LastName</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <button class="btn btn-primary mt-3 custom-margin-right" id="rateDoctorBtn">Rate Doctor</button>
+
+            <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3">Back to List</a>
+        </div>
+
     }
-    <div class="card">
-        <div class="card-header">
-            User Details
-        </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">ID</dt>
-                <dd class="col-sm-9">@doctorId</dd>
 
-                <dt class="col-sm-3">Username</dt>
-                <dd class="col-sm-9">@Model.UserName</dd>
 
-                <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9">@Model.Email</dd>
+@* View Comments *@
+<script>
+    const doctorId = '@doctorId';
+    async function toggleViewComment(doctorId) {
+        const viewComment = document.getElementById('viewComment');
+        const ratingForm = document.getElementById('ratingForm');
 
-                <dt class="col-sm-3">Name</dt>
-                <dd class="col-sm-9">@Model.FirstName @Model.LastName</dd>
-            </dl>
-        </div>
-    </div>
+        if (viewComment.style.display === 'none') {
+            try {
+                const response = await fetch(`/Review/GetRecentComments?doctorId=${doctorId}`);
+                const htmlContent = await response.text();
+                document.getElementById('commentContent').innerHTML = htmlContent;
+                viewComment.style.display = 'block';
+                ratingForm.style.display = 'none'; // Hide rating form
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                document.getElementById('starRating').innerHTML = '<p>Error loading comments.</p>';
+            }
+        } else {
+            viewComment.style.display = 'none';
+        }
+    }
+</script>
 
-    <button class="btn btn-primary mt-3 custom-margin-right" id="rateDoctorBtn">Rate Doctor</button>
-
-    <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3">Back to List</a>
-</div>
-    <div id="ratingForm" class="mt-4 p-4 border rounded" style="display: none;">
-        <h3 class="text-lg font-semibold mb-2">Rate Doctor</h3>
-        <div id="starRating" class="flex mb-2">
-        </div>
-        <input type="text" id="commentInput" class="form-control mb-2" placeholder="Leave a comment">
-        <button id="submitRatingBtn" class="btn btn-primary">Submit</button>
-    </div>
-
-    <div id="messageAlert" class="alert alert-info mt-10" style="display: none;"></div>
-</div>
-
+@* Rating System *@
 <script>
     const doctorRatingComponent = (() => {
         const doctorId = '@doctorId'; 
@@ -85,13 +148,16 @@
 
         function attachEventListeners() {
             rateDoctorBtn.addEventListener('click', toggleRatingForm);
+            viewComment.addEventListener('click', toggleViewComment);
             starRating.addEventListener('click', handleStarClick);
             submitRatingBtn.addEventListener('click', submitRating);
         }
 
         function toggleRatingForm() {
+            const viewComment = document.getElementById('viewComment');
             ratingForm.style.display = ratingForm.style.display === 'none' ? 'block' : 'none';
             rateDoctorBtn.textContent = ratingForm.style.display === 'none' ? 'Rate Doctor' : 'Cancel';
+            viewComment.style.display = 'none'; // Hide comment view
         }
 
         function handleStarClick(event) {
@@ -120,7 +186,6 @@
                 Comment: commentInput.value
             };
 
-            // Replace with your actual API endpoint
             fetch('/Review/Create', {
                 method: 'POST',
                 headers: {
@@ -133,6 +198,7 @@
                 .then(data => {
                     if (data.success) {
                         showMessage('Thank you for your review!', 'alert-success');
+                        windows.location.reload();
                         resetForm();
                     } else {
                         showMessage('Error submitting review: ' + data.message, 'alert-danger');
