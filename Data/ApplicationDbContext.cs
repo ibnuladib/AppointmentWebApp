@@ -14,7 +14,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+    /// </summary>
     public DbSet<Review> Reviews { get; set; }
+
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,16 +25,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         // Configure the one-to-one relationship between Appointment and Transaction
         modelBuilder.Entity<Appointment>()
-                .HasOne<Transaction>()
+                .HasOne<Transaction>() 
                 .WithOne(t => t.Appointment)
-                .HasForeignKey<Transaction>(t => t.AppointmentId)
+                .HasForeignKey<Transaction>(t => t.AppointmentId) 
                 .OnDelete(DeleteBehavior.Cascade);
 
         // Configure the one-to-one relationship for Patient
         modelBuilder.Entity<Appointment>()
-            .HasOne(a => a.Patient)
-            .WithMany()  // Each ApplicationUser will have many appointments
-            .HasForeignKey(a => a.PatientId)
+            .HasOne(a => a.Patient).WithMany().HasForeignKey(a => a.PatientId)  // Each ApplicationUser will have many appointments
             .OnDelete(DeleteBehavior.Restrict);
 
         // Configure the one-to-one relationship for Doctor

@@ -10,7 +10,7 @@ namespace AppointmentWebApp.Services
     public class AppointmentService
     {
         private readonly ApplicationDbContext _context;
-
+            
         public AppointmentService(ApplicationDbContext context)
         {
             _context = context;

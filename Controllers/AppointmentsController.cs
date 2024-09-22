@@ -98,8 +98,6 @@ namespace AppointmentWebApp.Controllers
         // POST: Appointments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        /*        public async Task<IActionResult> Create([Bind("Id,DoctorId,PatientId,Amount,AppointmentDate,Symptoms,IsPaid")] Appointment appointment)
-                {*/
         public async Task<IActionResult> Create(Appointment appointment)
         {
             if (ModelState.IsValid)
