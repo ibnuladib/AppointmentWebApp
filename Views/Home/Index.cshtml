@@ -1,9 +1,193 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Baymax Care";
     Layout = null;
 }
 
-<h1>Landing Page</h1>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Services Landing Page</title>
 
-<p>If you have an account, please <a href="@Url.Page("/Account/Login", new { area = "Identity" })">log in</a> to access more features.</p>
+    <!-- CSS Styles -->
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f0f4f8;
+        }
 
+        /* Navigation Bar Styles */
+        .navbar {
+            background-color: #000000;
+            padding: .5em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar .logo {
+            color: rgb(247, 237, 237);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1.5em;
+        }
+
+        .navbar .nav-links li {
+            display: inline;
+        }
+
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #e9c46a;
+        }
+
+        /* Landing Section Styles */
+        .landing-section {
+            height: 100vh;
+            background: url('healthcare-banner.jpg') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .landing-section .landing-text h1 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+        }
+
+        .landing-section .landing-text p {
+            font-size: 1.2em;
+            margin-bottom: 1em;
+        }
+
+        .landing-section .btn {
+            background-color: #e76f51;
+            padding: 0.8em 2em;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .landing-section .btn:hover {
+            background-color: #f4a261;
+        }
+
+        /* About, Services, Contact Section Styles */
+        section {
+            padding: 4em 2em;
+            text-align: center;
+        }
+
+        #about, #services, #contact {
+            background-color: #fff;
+            margin: 1em 0;
+        }
+
+        #services ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #services li {
+            font-size: 1.1em;
+            margin: 0.5em 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">BayMax Healthcare </div>
+        <ul class="nav-links"
+            <li>
+                <a href="@Url.Page("/Account/Login", new { area = "Identity" })">log in</a>
+                </li>
+            <li><a href="registerlink">Register</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Landing Section -->
+    <section id="home" class="landing-section" style=" height: 50vh; background-image: url('your-image.jpg'); background-size: cover; background-position: center; position: relative;">
+        <!-- Optional Overlay for Better Text Visibility -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);"></div>
+
+        <!-- Text Content -->
+        <div style="position: relative; z-index: 1; color: white; text-align: center; padding-top: 10vh;">
+            <h1>Welcome to Healthcare Services</h1>
+            <p>Your health is our priority. We provide top-quality medical services.</p>
+        </div>
+    </section>
+
+
+    <!-- find doctor, locations, appointment section -->
+    <div class="story-panel__carousel js-story-panel__carousel container story-panel__no-carousel">
+        <ul class="story-panel__cards-container js-story-panel__cards-container story-panel__full-width" style="display: flex; justify-content: space-between;">
+
+            <li class="story-layout" style="flex: 1; margin: 0 10px;">
+                <div class="story-panel__card js-story-panel__card" style="height: 20vh;">
+                    <div class="story-panel__card-content story-panel__no-selection ">
+                        <a class="story-panel__image-link" href="/staff">
+                            <div class="story-panel__image-overlay">
+                                <img class="js-story-panel__image" src="doctoor_demo.avif" width="634" height="356" alt="Find a Doctor">
+                            </div>
+                        </a>
+                        <a class="story-panel__title-link" href="/staff"><h3 class="story-panel__title">Our Doctors</h3></a>
+                        <p class="story-panel__description">Search by name, specialty, location and more.</p>
+                    </div>
+                </div>
+            </li>
+            <li class="story-layout" style="flex: 1; margin: 0 10px;">
+                <div class="story-panel__card js-story-panel__card" style="height: 20vh;">
+                    <div class="story-panel__card-content story-panel__no-selection ">
+                        <a class="story-panel__image-link" href="/locations">
+                            <div class="story-panel__image-overlay">
+                                <img class="js-story-panel__image" src="/-/scassets/images/org/locations/home/locations-card.jpg" width="634" height="356" alt="Locations">
+                            </div>
+                        </a>
+                        <a class="story-panel__title-link" href="/locations"><h3 class="story-panel__title">Locations &amp; Directions</h3></a>
+                        <p class="story-panel__description">Find any of our 300+ locations.</p>
+                    </div>
+                </div>
+            </li>
+            <li class="story-layout" style="flex: 1; margin: 0 10px;">
+                <div class="story-panel__card js-story-panel__card" style="height: 20vh;">
+                    <div class="story-panel__card-content story-panel__no-selection ">
+                        <a class="story-panel__image-link" href="/patients/information/access">
+                            <div class="story-panel__image-overlay">
+                                <img class="js-story-panel__image" src="/-/scassets/images/org/locations/home/appointments-card.jpg" width="634" height="356" alt="Appointments">
+                            </div>
+                        </a>
+                        <a class="story-panel__title-link" href="/patients/information/access"><h3 class="story-panel__title">Appointments</h3></a>
+                        <p class="story-panel__description">Get the in person or virtual care you need.</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" style="height: 10vh;">
+        <h2>Contact Us</h2>
+        <p>Address: 123 Health St, Wellness City, HC 56789</p>
+        <p>Email: contact@healthcare.com</p>
+        <p>Phone: +1 234 567 890</p>
+    </section>
+</body>
+
+</html>
