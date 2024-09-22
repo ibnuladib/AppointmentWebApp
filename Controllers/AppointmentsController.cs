@@ -179,7 +179,9 @@ namespace AppointmentWebApp.Controllers
             return View(appointment);
         }
 
-        [Authorize(Roles = "Admin")]
+
+
+    [Authorize(Roles = "Admin")]
 
         // GET: Appointments/Delete/5
         public async Task<IActionResult> Delete(int id)

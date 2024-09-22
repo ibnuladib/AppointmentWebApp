@@ -14,7 +14,10 @@ namespace AppointmentWebApp.Models
         public string DoctorId { get; set; }
         public ApplicationUser? Doctor { get; set; }
         [Required]
+        public string Status { get; set; }
+        [Required]
         public DateTime AppointmentDate { get; set; }
+
         [Required]
         public TimeSpan AppointmentDuration { get; set; }
         [Required]
@@ -23,6 +26,10 @@ namespace AppointmentWebApp.Models
         public bool IsPaid { get; set; }
         [Required]
         public decimal Amount { get; set; }
+
+        public Appointment() {
+            Status = "Up Coming";
+        }
 
     }
 }

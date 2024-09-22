@@ -22,7 +22,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 
 builder.Services.AddScoped<AppointmentService>();
 
-
+builder.Services.AddHostedService<AppointmentCheckerService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

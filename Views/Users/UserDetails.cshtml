@@ -13,7 +13,7 @@
     <div class="container mt-5">
 
         <div class="card">
-            <div class="card-header">
+            <div class=" card-header">
                 Doctor Details
             </div>
             <div class="card-body">
@@ -30,27 +30,45 @@
                     <dt class="col-sm-3">Name</dt>
                     <dd class="col-sm-9">@Model.FirstName @Model.LastName</dd>
 
+                    <dt class="col-sm-3">Specialization</dt>
+                    <dd class="col-sm-9">@Model.Specialization</dd>
+
+                    <dt class="col-sm-3">Qualification</dt>
+                    <dd class="col-sm-9">@Model.Qualification</dd>
+
+                    <dt class="col-sm-3">Consultation Fees per hour</dt>
+                    <dd class="col-sm-9">@Model.ConsultationFeesPerHour</dd>
+
+                    <dt class="col-sm-3">Medical License</dt>
+                    <dd class="col-sm-9">@Model.MedicalLicenseNumber</dd>
+
                     <dt class="col-sm-3">Average Rating</dt>
                     <dd class="col-sm-9">@Model.AverageRating</dd>
+
+                    <dt class="col-sm-3">Patients served</dt>
+                    <dd class="col-sm-9">@Model.TotalAppointments</dd>
+
+                    <dt class="col-sm-3">Years of Experience</dt>
+                    <dd class="col-sm-9">@Model.YearsOfExperience</dd>
                 </dl>
             </div>
         </div>  
 
         <button class="btn btn-primary mt-3 custom-margin-right" id="rateDoctorBtn">Rate Doctor</button>
 
-        <button class="btn btn-primary mt-3 custom margin-right" onclick="toggleViewComment('@doctorId')">View Comments</button>
-        <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3">Back to List</a>
+        <button class="btn btn-primary mt-3 custom-margin-right" onclick="toggleViewComment('@doctorId')">View Comments</button>
+        <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3 custom-margin-right">Back to List</a>
 
     </div>
         <div id="ratingForm" class="mt-4 p-4 border rounded" style="display: none;">
-            <h3 class="text-lg font-semibold mb-2">Rate Doctor</h3>
+            <h5 class="text-lg font-semibold mb-2">Rate Doctor</h5>
             <div id="starRating" class="flex mb-2">
             </div>
             <input type="text" id="commentInput" class="form-control mb-2" placeholder="Leave a comment">
-            <button id="submitRatingBtn" class="btn btn-primary">Submit</button>
+            <button id="submitRatingBtn" class="btn btn-primary mt-4">Submit</button>
         </div>
     <div id="viewComment" class="mt-4 p-4 border rounded" style="display: none;">
-        <h3 class="text-lg font-semibold mb-2">Recent Comments</h3>
+        <h5 class="text-lg font-semibold mb-2">Recent Comments</h5>
         <div id="commentContent"></div>
     </div>
 
