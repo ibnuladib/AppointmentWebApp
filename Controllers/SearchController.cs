@@ -19,39 +19,45 @@ namespace AppointmentWebApp
 
         public async Task<IActionResult> Index(string searchString)
         {
-            var users = await _userManager.Users.ToListAsync();
-            var doctors = new List<ApplicationUser>();
+            var allUsers = await _userManager.Users.ToListAsync();
 
-            foreach (var user in users)
+            // Filter only doctors
+            var doctorUsers = new List<ApplicationUser>();
+            foreach (var user in allUsers)
             {
                 if (await _userManager.IsInRoleAsync(user, "Doctor"))
                 {
-                    doctors.Add(user);
+                    doctorUsers.Add(user);
                 }
             }
-
             if (!string.IsNullOrEmpty(searchString))
             {
-                searchString = searchString.ToLower();
-                doctors = doctors.Where(d =>
-                    d.UserName.ToLower().Contains(searchString) ||
-                    d.Id.Contains(searchString) ||
-                    d.Email.ToLower().Contains(searchString) // Adjust if you have specialty in a custom property
-                ).ToList();
+                doctorUsers = doctorUsers.Where(u => u.UserName.Contains(searchString) ||
+                                          u.Email.Contains(searchString) ||
+                                          u.FirstName.Contains(searchString) ||
+                                          u.LastName.Contains(searchString) ||
+                                          u.Specialization.Contains(searchString)).ToList();
             }
 
-            return View(doctors);
+            return View(doctorUsers.ToList());
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetSuggestions(string query)
+        public JsonResult GetSuggestions(string query)
         {
-            var users = await _userManager.Users
-                .Where(u => u.UserName.Contains(query) || u.Email.Contains(query) /* Add more filters as needed */)
-                .Select(u => new { id = u.Id, name = u.UserName }) // or any other property you want to display
-                .ToListAsync();
+            var suggestions = _userManager.Users
+                .Where(u => u.FirstName.Contains(query) ||
+                             u.LastName.Contains(query) ||
+                             u.Specialization.Contains(query))
+                .Select(u => new
+                {
+                    id = u.Id,
+                    firstName = u.FirstName,
+                    lastName = u.LastName,
+                    specialization = u.Specialization
+                })
+                .ToList();
 
-            return Json(users);
+            return Json(suggestions);
         }
 
     }

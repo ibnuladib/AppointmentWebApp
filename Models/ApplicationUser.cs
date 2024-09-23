@@ -24,6 +24,8 @@ namespace AppointmentWebApp.Models
         public ApplicationUser()
         {
             DateOfAccountCreation = DateTime.Now;
+            TotalAppointments = 0;
+            AverageRating = 0;
         }
 
         // Doctor-specific attributes
@@ -36,7 +38,7 @@ namespace AppointmentWebApp.Models
         public decimal? ConsultationFeesPerHour { get; set; } // Nullable
         public int? YearsOfExperience { get; set; } // Nullable
         public int? TotalAppointments { get; set; } // Nullable
-        public List<Review>? Reviews { get; set; } // Nullable
+        public List<Review>? Reviews { get; set; }
 
         // Patient-specific attributes
         public string? BloodGroup { get; set; } // Nullable
