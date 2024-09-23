@@ -12,6 +12,60 @@
     <!-- CSS Styles -->
     <style>
         /* Global Styles */
+        .services {
+            padding: 4rem 2rem;
+            text-align: center;
+            background-color: #f0f4f8;
+        }
+
+            .services h2 {
+                font-size: 2.5rem;
+                margin-bottom: 2rem;
+            }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 2rem;
+        }
+
+        .service-item {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .service-item img {
+                width: 4rem;
+                height: 4rem;
+                margin-bottom: 1rem;
+            }
+
+            .service-item h3 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .service-item p {
+                font-size: 1.1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .service-item .learn-more {
+                display: inline-block;
+                background-color: #4a5568;
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.25rem;
+                text-decoration: none;
+                font-size: 1.1rem;
+                transition: background-color 0.3s;
+            }
+
+                .service-item .learn-more:hover {
+                    background-color: #6b7280;
+                }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -136,57 +190,37 @@
 
 
     <!-- find doctor, locations, appointment section -->
-    <div class="story-panel__carousel js-story-panel__carousel container story-panel__no-carousel">
-        <ul class="story-panel__cards-container js-story-panel__cards-container story-panel__full-width" style="display: flex; justify-content: space-between;">
+    <section class="services">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+            <div class="service-item">
+                <img src="" alt="Icon1">
+                <h3>Appointment</h3>
+                <p>Book an Appointment</p>
+                <a href="#" class="learn-more">Book an Appointment</a>
+            </div>
+            <div class="service-item">
+                <img src="" alt="Icon2">
+                <h3>Search for Doctors</h3>
+                <p>Search for doctors</p>
+                <a href="#" class="learn-more">Search for doctor</a>
+            </div>
+            <div class="service-item">
+                <img src="" alt="Icon3">
+                <h3>Make Account</h3>
+                <p>Make an Account</p>
+                <a href="#" class="learn-more">Make an Account</a>
+            </div>
+        </div>
+    </section>
 
-            <li class="story-layout" style="flex: 1; margin: 0 10px;">
-                <div class="story-panel__card js-story-panel__card" style="height: 20vh;">
-                    <div class="story-panel__card-content story-panel__no-selection ">
-                        <a class="story-panel__image-link" href="/staff">
-                            <div class="story-panel__image-overlay">
-                                <img class="js-story-panel__image" src="doctoor_demo.avif" width="634" height="356" alt="Find a Doctor">
-                            </div>
-                        </a>
-                        <a class="story-panel__title-link" href="/staff"><h3 class="story-panel__title">Our Doctors</h3></a>
-                        <p class="story-panel__description">Search by name, specialty, location and more.</p>
-                    </div>
-                </div>
-            </li>
-            <li class="story-layout" style="flex: 1; margin: 0 10px;">
-                <div class="story-panel__card js-story-panel__card" style="height: 20vh;">
-                    <div class="story-panel__card-content story-panel__no-selection ">
-                        <a class="story-panel__image-link" href="/locations">
-                            <div class="story-panel__image-overlay">
-                                <img class="js-story-panel__image" src="/-/scassets/images/org/locations/home/locations-card.jpg" width="634" height="356" alt="Locations">
-                            </div>
-                        </a>
-                        <a class="story-panel__title-link" href="/locations"><h3 class="story-panel__title">Locations &amp; Directions</h3></a>
-                        <p class="story-panel__description">Find any of our 300+ locations.</p>
-                    </div>
-                </div>
-            </li>
-            <li class="story-layout" style="flex: 1; margin: 0 10px;">
-                <div class="story-panel__card js-story-panel__card" style="height: 20vh;">
-                    <div class="story-panel__card-content story-panel__no-selection ">
-                        <a class="story-panel__image-link" href="/patients/information/access">
-                            <div class="story-panel__image-overlay">
-                                <img class="js-story-panel__image" src="/-/scassets/images/org/locations/home/appointments-card.jpg" width="634" height="356" alt="Appointments">
-                            </div>
-                        </a>
-                        <a class="story-panel__title-link" href="/patients/information/access"><h3 class="story-panel__title">Appointments</h3></a>
-                        <p class="story-panel__description">Get the in person or virtual care you need.</p>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Contact Section -->
-    <section id="contact" style="height: 10vh;">
+    <section id="contact" class="contact">
         <h2>Contact Us</h2>
-        <p>Address: 123 Health St, Wellness City, HC 56789</p>
-        <p>Email: contact@healthcare.com</p>
-        <p>Phone: +1 234 567 890</p>
+        <div class="contact-info">
+            <p>Address: 123 Health St, Wellness City, HC 56789</p>
+            <p>Email: contact@healthcare.com</p>
+            <p>Phone: +1 234 567 890</p>
+        </div>
     </section>
 </body>
 
