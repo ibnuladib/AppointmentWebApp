@@ -7,12 +7,32 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<form asp-controller="Search" asp-action="Index" method="get">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" name="searchString" id="searchBox" placeholder="Search by ID, Name, Specialization, or Email" autocomplete="off" />
+<form asp-controller="Search" asp-action="Index" method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" class="form-control" name="searchString" id="searchBox" placeholder="Search by ID, Name, Specialization, or Email" autocomplete="off" style="width: 300px;" />
         <button class="btn btn-primary" type="submit">Search</button>
+        <div class="dropdown ms-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="specializationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Specialization
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="specializationDropdown">
+                <li><a class="dropdown-item" href="@Url.Action("Index")">All Specializations</a></li>
+                @foreach (var item in ViewBag.SpecializationCounts)
+                {
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("Index", new { specialization = item.Specialization })">
+                            @item.Specialization (@item.Count)
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <button class="btn btn-secondary ms-2" onclick="window.location.href='@Url.Action("Index", new { filterBy = "rating" })'">Filter by Rating</button>
+
+        <button class="btn btn-secondary ms-2" onclick="window.location.href='@Url.Action("Index", new { filterBy = "experience" })'">Filter by Experience</button>
     </div>
 </form>
+
 
 <div id="suggestions" class="list-group"></div>
 
@@ -24,9 +44,6 @@
                 <th>ID</th>
                 <th>Username</th>
                 <th>Email</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Specialization</th>
                 <!-- Add more columns if needed -->
             </tr>
         </thead>
@@ -37,9 +54,6 @@
                     <td>@user.Id</td>
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
-                    <td>@user.FirstName</td>
-                    <td>@user.LastName</td>
-                    <td>@user.Specialization</td>
                     <!-- Add more columns if needed -->
                 </tr>
             }
@@ -50,13 +64,13 @@ else
 {
     <p>No doctors found.</p>
 }
-
 <style>
+    <style >
     .clickable-row {
         cursor: pointer;
     }
 </style>
-
+</style>
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -72,7 +86,7 @@ else
                             var suggestionsList = $('#suggestions');
                             suggestionsList.empty();
                             data.forEach(function (suggestion) {
-                                var suggestionItem = '<a href="#" class="list-group-item list-group-item-action" data-id="' + suggestion.id + '">' + suggestion.firstName + ' ' + suggestion.lastName + ' (' + suggestion.specialization + ')</a>';
+                                var suggestionItem = '<a href="#" class="list-group-item list-group-item-action" data-id="' + suggestion.id + '">' + suggestion.name + '">'+ suggestion.firstname '</a>';
                                 suggestionsList.append(suggestionItem);
                             });
                         }
