@@ -17,11 +17,11 @@ namespace AppointmentWebApp
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, string specialization, string filterBy)
         {
+
             var allUsers = await _userManager.Users.ToListAsync();
 
-            // Filter only doctors
             var doctorUsers = new List<ApplicationUser>();
             foreach (var user in allUsers)
             {
@@ -30,17 +30,51 @@ namespace AppointmentWebApp
                     doctorUsers.Add(user);
                 }
             }
+
+
+            // Create a dictionary to hold specializations and their counts
+            var specializationCounts = doctorUsers
+                .GroupBy(u => u.Specialization)
+                .Select(g => new
+                {
+                    Specialization = g.Key,
+                    Count = g.Count()
+                })
+                .ToList();
+
+            // Store searchString in ViewBag
+            ViewBag.SearchString = searchString;
+
+            // Apply filters based on the parameters
             if (!string.IsNullOrEmpty(searchString))
             {
                 doctorUsers = doctorUsers.Where(u => u.UserName.Contains(searchString) ||
-                                          u.Email.Contains(searchString) ||
-                                          u.FirstName.Contains(searchString) ||
-                                          u.LastName.Contains(searchString) ||
-                                          u.Specialization.Contains(searchString)).ToList();
+                                                      u.Email.Contains(searchString) ||
+                                                      u.FirstName.Contains(searchString) ||
+                                                      u.LastName.Contains(searchString) ||
+                                                      u.Specialization.Contains(searchString)).ToList();
             }
 
-            return View(doctorUsers.ToList());
+            if (!string.IsNullOrEmpty(specialization))
+            {
+                doctorUsers = doctorUsers.Where(u => u.Specialization == specialization).ToList();
+            }
+
+            if (filterBy == "rating")
+            {
+                doctorUsers = doctorUsers.OrderByDescending(u => u.AverageRating).ToList(); // Adjust to your rating property
+            }
+            else if (filterBy == "experience")
+            {
+                doctorUsers = doctorUsers.OrderByDescending(u => u.YearsOfExperience).ToList(); // Adjust to your experience property
+            }
+
+            ViewBag.SpecializationCounts = specializationCounts; // Pass the specialization counts to the view
+
+            return View(doctorUsers);
         }
+
+
 
         public JsonResult GetSuggestions(string query)
         {
