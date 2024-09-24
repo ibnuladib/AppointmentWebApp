@@ -10,7 +10,7 @@
 
     <button class="btn btn-primary mt-3 custom-margin-right" id="rateDoctorBtn">Rate Doctor</button>
 <button class="btn btn-primary mt-3 custom-margin-right" onclick="toggleViewComment('@Model.Id')">View Comments</button>
-    <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3 custom-margin-right">Back to List</a>
+    <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3 custom-margin-right">List</a>
 
     <div id="ratingForm" class="mt-4 p-4 border rounded" style="display: none;">
         <h5 class="text-lg font-semibold mb-2">Rate Doctor</h5>
@@ -141,7 +141,8 @@
                 .then(data => {
                     if (data.success) {
                         showMessage('Thank you for your review!', 'alert-success');
-                        window.location.reload();
+
+                        //window.location.reload();
                         resetForm();
                     } else {
                         showMessage('Error submitting review: ' + data.message, 'alert-danger');
