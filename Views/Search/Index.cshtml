@@ -7,10 +7,11 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<form asp-controller="Search" asp-action="Index" method="get" class="mb-3">
+
     <div class="input-group">
         <input type="text" class="form-control" name="searchString" id="searchBox" placeholder="Search by ID, Name, Specialization, or Email" autocomplete="off" style="width: 300px;" />
-        <button class="btn btn-primary" type="submit">Search</button>
+    <button class="btn btn-secondary ms-2" onclick="window.location.href='@Url.Action("Index")?searchString=' + document.getElementById('searchBox').value">Search</button>
+
         <div class="dropdown ms-2">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="specializationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 Specialization
@@ -28,11 +29,20 @@
             </ul>
 
         </div>
-        <button class="btn btn-secondary ms-2" onclick="window.location.href='@Url.Action("Index", new { filterBy = "rating" })'">Filter by Rating</button>
+    <!-- Filter by Rating, preserving search and specialization -->
+    <button class="btn btn-secondary ms-2"
+            onclick="window.location.href='@Url.Action("Index", new { searchString = ViewBag.SearchString, specialization = ViewBag.Specialization, filterBy = "rating" })'">
+        Filter by Rating
+    </button>
 
-        <button class="btn btn-secondary ms-2" onclick="window.location.href='@Url.Action("Index", new { filterBy = "experience" })'">Filter by Experience</button>
+    <!-- Filter by Experience, preserving search and specialization -->
+    <button class="btn btn-secondary ms-2"
+            onclick="window.location.href='@Url.Action("Index", new { searchString = ViewBag.SearchString, specialization = ViewBag.Specialization, filterBy = "experience" })'">
+        Filter by Experience
+    </button>
+
     </div>
-</form>
+
 
 
 <div id="suggestions" class="list-group"></div>
@@ -44,9 +54,10 @@
             <tr>
                 <th>ID</th>
                 <th>Username</th>
-                <th>Email</th>
+                
                 <th>Name</th>
                 <th>Specialization</th>
+                <th>Rating</th>
             </tr>
         </thead>
         <tbody>
@@ -55,9 +66,10 @@
                 <tr class="clickable-row" data-id="@user.Id">
                     <td>@user.Id</td>
                     <td>@user.UserName</td>
-                    <td>@user.Email</td>
+                    
                     <td>@user.FirstName @user.LastName</td>
                     <td>@user.Specialization</td>
+                    <td>@user.AverageRating</td>
                     <td>
                         <a asp-controller="Users" asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-primary">Details</a>
                     </td>
@@ -92,7 +104,7 @@ else
                             var suggestionsList = $('#suggestions');
                             suggestionsList.empty();
                             data.forEach(function (suggestion) {
-                                var suggestionItem = '<a href="#" class="list-group-item list-group-item-action" data-id="' + suggestion.id + '">' + suggestion.name + '">'+ suggestion.firstname '</a>';
+                                var suggestionItem = '<a href="#" class="list-group-item list-group-item-action" data-id="' + suggestion.id + '">' + suggestion.firstName + ', ' + suggestion.lastName + ' (' + suggestion.specialization + ')</a>';
                                 suggestionsList.append(suggestionItem);
                             });
                         }
