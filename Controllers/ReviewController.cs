@@ -106,6 +106,11 @@ namespace AppointmentWebApp.Controllers
 
             return PartialView("_RecentCommentsPartial", viewModel);
         }
+        public async Task<IActionResult> Index()
+        {
+            var reviews = _context.Reviews.ToListAsync();    
+            return View("Index");
+        }
 
 
 
