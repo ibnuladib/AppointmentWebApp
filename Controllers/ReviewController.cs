@@ -34,14 +34,18 @@ namespace AppointmentWebApp.Controllers
                         return Json(new { success = false, message = "You have already reviewed the Doctor" });
                     }
 
-                      // Call to update average rating
                     _context.Add(review);
                     await _context.SaveChangesAsync();
                     await UpdateAverageRating(review.DoctorId);
                     return Json(new { success = true, message = "Review submitted successfully!" });
                 }
+                else
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                    _logger.LogWarning("Model state is invalid: {Errors}", string.Join(", ", errors));
+                    return Json(new { success = false, message = "Invalid review data.", errors });
+                }
 
-                return Json(new { success = false, message = "Invalid review data." });
             }
             catch (Exception ex)
             {
@@ -79,24 +83,18 @@ namespace AppointmentWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRecentComments()
+        public async Task<IActionResult> GetRecentComments(string doctorId)
         {
             var recentComments = await _context.Reviews
-                //.OrderByDescending(r => r.Date) // Assuming you have a Date property
+                .Where(r => r.DoctorId == doctorId)
+                .OrderByDescending(r => r.DateCreated)
                 .Take(10)
                 .ToListAsync();
 
             var patientIds = recentComments.Select(r => r.PatientId).Distinct();
-            var patients = new List<ApplicationUser>();
-
-            foreach (var patientId in patientIds)
-            {
-                var patient = await _userManager.FindByIdAsync(patientId);
-                if (patient != null)
-                {
-                    patients.Add(patient);
-                }
-            }
+            var patients = await _userManager.Users
+                .Where(u => patientIds.Contains(u.Id))
+                .ToListAsync();
 
             var viewModel = new CommentViewModel
             {

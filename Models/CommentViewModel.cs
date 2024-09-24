@@ -5,5 +5,7 @@
             public List<Review> Comments { get; set; }
             public List<ApplicationUser> Patients { get; set; }
 
+            public List<ApplicationUser> Doctors { get; set; }
+
     }
 }

@@ -1,0 +1,188 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model ApplicationUser
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var doctorId = Model.Id; // Doctor's ID if you're viewing a doctor profile
+    var patientId = UserManager.GetUserId(User); // Logged-in user's ID
+}
+
+
+    <button class="btn btn-primary mt-3 custom-margin-right" id="rateDoctorBtn">Rate Doctor</button>
+<button class="btn btn-primary mt-3 custom-margin-right" onclick="toggleViewComment('@Model.Id')">View Comments</button>
+    <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3 custom-margin-right">Back to List</a>
+
+    <div id="ratingForm" class="mt-4 p-4 border rounded" style="display: none;">
+        <h5 class="text-lg font-semibold mb-2">Rate Doctor</h5>
+        <div id="starRating" class="flex mb-2">
+        </div>
+        <input type="text" id="commentInput" class="form-control mb-2" placeholder="Leave a comment">
+        <button id="submitRatingBtn" class="btn btn-primary mt-4">Submit</button>
+    </div>
+    <div id="viewComment" class="mt-4 p-4 border rounded" style="display: none;">
+        <h5 class="text-lg font-semibold mb-2">Recent Comments</h5>
+        <div id="commentContent"></div>
+    </div>
+
+    <div id="messageAlert" class="alert alert-info mt-10" style="display: none;"></div>
+
+
+
+@* View Comments *@
+<script>
+    function toggleViewComment(doctorId) {
+        const viewComment = document.getElementById('viewComment');
+        const ratingForm = document.getElementById('ratingForm');
+
+        if (viewComment.style.display === 'none') {
+            fetch(`/Review/GetRecentComments?doctorId=${doctorId}`)
+                .then(response => response.text())
+                .then(htmlContent => {
+                    document.getElementById('commentContent').innerHTML = htmlContent;
+                    viewComment.style.display = 'block';
+                    ratingForm.style.display = 'none'; // Hide rating form
+                })
+                .catch(error => {
+                    console.error('Error loading comments:', error);
+                    document.getElementById('commentContent').innerHTML = '<p>Error loading comments.</p>';
+                });
+        } else {
+            viewComment.style.display = 'none';
+        }
+    }
+</script>
+@* Rating System *@
+<script>
+    const doctorRatingComponent = (() => {
+        const doctorId = '@doctorId';
+        const patientId = '@patientId';
+        let selectedRating = 0;
+
+        const rateDoctorBtn = document.getElementById('rateDoctorBtn');
+        const ratingForm = document.getElementById('ratingForm');
+        const starRating = document.getElementById('starRating');
+        const commentInput = document.getElementById('commentInput');
+        const submitRatingBtn = document.getElementById('submitRatingBtn');
+        const messageAlert = document.getElementById('messageAlert');
+
+        function init() {
+            createStars();
+            attachEventListeners();
+        }
+
+        function createStars() {
+            for (let i = 1; i <= 5; i += 1) {
+                const star = document.createElement('span');
+                star.innerHTML = '&#9733;';
+                star.className = 'star';
+                star.style.fontSize = '24px';
+                star.style.color = 'gray';
+                star.style.cursor = 'pointer';
+                star.dataset.value = i;
+                starRating.appendChild(star);
+            }
+        }
+
+        function attachEventListeners() {
+            rateDoctorBtn.addEventListener('click', toggleRatingForm);
+            viewComment.addEventListener('click', toggleViewComment);
+            starRating.addEventListener('click', handleStarClick);
+            submitRatingBtn.addEventListener('click', submitRating);
+        }
+
+        function toggleRatingForm() {
+            const viewComment = document.getElementById('viewComment');
+            ratingForm.style.display = ratingForm.style.display === 'none' ? 'block' : 'none';
+            rateDoctorBtn.textContent = ratingForm.style.display === 'none' ? 'Rate Doctor' : 'Cancel';
+            viewComment.style.display = 'none'; // Hide comment view
+        }
+
+        function handleStarClick(event) {
+            if (event.target.classList.contains('star')) {
+                selectedRating = parseInt(event.target.dataset.value);
+                updateStars();
+            }
+        }
+
+        function updateStars() {
+            starRating.querySelectorAll('.star').forEach(star => {
+                star.style.color = parseInt(star.dataset.value) <= selectedRating ? 'gold' : 'gray';
+            });
+        }
+
+        function submitRating() {
+            if (selectedRating === 0) {
+                showMessage('Please select a rating.', 'alert-warning');
+                return;
+            }
+            if (doctorId == null) {
+                showMessage('No doctor','alert-warning');
+            }
+            if (patientId == null) {
+                showMessage('No patient', 'alert-warning');
+            }
+
+            const review = {
+                DoctorId: doctorId,
+                PatientId: patientId,
+                Rating: selectedRating,
+                Comment: commentInput.value,
+                DateCreated: Date.now
+            };
+
+            fetch('/Review/Create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(review)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage('Thank you for your review!', 'alert-success');
+                        windows.location.reload();
+                        resetForm();
+                    } else {
+                        showMessage('Error submitting review: ' + data.message, 'alert-danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting review:', error);
+                    showMessage('Error submitting your review. Please try again.', 'alert-danger');
+                });
+        }
+
+        function showMessage(message, className) {
+            messageAlert.textContent = message;
+            messageAlert.className = `alert ${className} mt-2`;
+            messageAlert.style.display = 'block';
+        }
+
+        function resetForm() {
+            selectedRating = 0;
+            updateStars();
+            commentInput.value = '';
+            toggleRatingForm();
+        }
+
+        return { init };
+    })();
+
+    document.addEventListener('DOMContentLoaded', doctorRatingComponent.init);
+</script>
+
+<style>
+    .star {
+        transition: color 0.2s;
+    }
+
+        .star:hover {
+            color: gold;
+        }
+
+    .custom-margin-right {
+        margin-right: 15px; /* Adjust the value as needed */
+    }
+</style>

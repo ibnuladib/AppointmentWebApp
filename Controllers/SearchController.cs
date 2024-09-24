@@ -31,8 +31,6 @@ namespace AppointmentWebApp
                 }
             }
 
-
-            // Create a dictionary to hold specializations and their counts
             var specializationCounts = doctorUsers
                 .GroupBy(u => u.Specialization)
                 .Select(g => new
