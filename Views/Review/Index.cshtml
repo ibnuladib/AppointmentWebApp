@@ -1,0 +1,66 @@
+﻿@model IEnumerable<AppointmentWebApp.Models.Review>
+
+@{
+    ViewData["Title"] = "Review";
+}
+
+<body>
+    <h1>Reviews</h1>
+
+    @if (Model == null || !Model.Any())
+    {
+        <p>No reviews available at the moment.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ReviewId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DoctorId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PatientId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateCreated)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Rating)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Comment)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReviewId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DoctorId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PatientId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateCreated)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Rating)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Comment)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</body>
