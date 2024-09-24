@@ -13,14 +13,12 @@ namespace AppointmentWebApp.Models
         public string PatientId { get; set; }
         public ApplicationUser? Patient { get; set; } // The patient who gives the rating
 
+        
+        public DateTime DateCreated { get; set; } = DateTime.Now;
+        
         [Range(1, 5)]
-        public DateTime DateCreated { get; set; }
         public int Rating { get; set; } // Rating score between 1 and 5
         public string Comment { get; set; } // Optional comments for the review
 
-        public Review()
-        {
-            DateCreated = DateTime.Now;
-        }
     }
 }

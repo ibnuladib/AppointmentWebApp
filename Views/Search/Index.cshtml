@@ -26,6 +26,7 @@
                     </li>
                 }
             </ul>
+
         </div>
         <button class="btn btn-secondary ms-2" onclick="window.location.href='@Url.Action("Index", new { filterBy = "rating" })'">Filter by Rating</button>
 
@@ -44,7 +45,8 @@
                 <th>ID</th>
                 <th>Username</th>
                 <th>Email</th>
-                <!-- Add more columns if needed -->
+                <th>Name</th>
+                <th>Specialization</th>
             </tr>
         </thead>
         <tbody>
@@ -54,7 +56,11 @@
                     <td>@user.Id</td>
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
-                    <!-- Add more columns if needed -->
+                    <td>@user.FirstName @user.LastName</td>
+                    <td>@user.Specialization</td>
+                    <td>
+                        <a asp-controller="Users" asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-primary">Details</a>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -96,14 +102,12 @@ else
                 }
             });
 
-            // Handle suggestion click event
             $(document).on('click', '.list-group-item', function (e) {
                 e.preventDefault();
                 var id = $(this).data('id');
                 window.location.href = '@Url.Action("UserDetails", "Users")' + '?id=' + id;
             });
 
-            // Handle table row click event
             $('.clickable-row').on('click', function () {
                 var id = $(this).data('id');
                 window.location.href = '@Url.Action("UserDetails", "Users")' + '?id=' + id;

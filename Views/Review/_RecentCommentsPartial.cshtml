@@ -1,15 +1,21 @@
 ﻿@model CommentViewModel
-
 <div>
-    <ul>
-        @foreach (var comment in Model.Comments)
-        {
-            var patient = Model.Patients.FirstOrDefault(p => p.Id == comment.PatientId);
-            <li>
-                <strong>@patient?.FirstName @patient?.LastName:</strong>
-                <span>@comment.Comment.ToString() &nbsp;&nbsp;&nbsp;</span>
-                <span class="rating"><strong>Rating:</strong> @Html.Raw(new string('★', comment.Rating))@Html.Raw(new string('☆', 5 - comment.Rating)) (@comment.Rating)/5</span>
-            </li>
-        }
-    </ul>
+    @if (Model.Comments.Any())
+    {
+        <ul>
+            @foreach (var comment in Model.Comments)
+            {
+                var patient = Model.Patients.FirstOrDefault(p => p.Id == comment.PatientId);
+                <li>
+                    <strong>@(patient?.FirstName ?? "Anonymous") @(patient?.LastName ?? ""):</strong>
+                    <span>@comment.Comment &nbsp;&nbsp;&nbsp;</span>
+                    <span class="rating"><strong>Rating:</strong> @Html.Raw(new string('★', comment.Rating))@Html.Raw(new string('☆', 5 - comment.Rating)) (@comment.Rating)/5</span>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No comments available for this doctor yet.</p>
+    }
 </div>
