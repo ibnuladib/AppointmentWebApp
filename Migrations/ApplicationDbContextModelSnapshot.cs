@@ -175,6 +175,10 @@ namespace AppointmentWebApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Symptoms")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -203,6 +207,9 @@ namespace AppointmentWebApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DoctorId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -211,8 +218,8 @@ namespace AppointmentWebApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("Rating")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
 
                     b.HasKey("ReviewId");
 
