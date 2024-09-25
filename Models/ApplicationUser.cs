@@ -26,6 +26,7 @@ namespace AppointmentWebApp.Models
             DateOfAccountCreation = DateTime.Now;
             TotalAppointments = 0;
             AverageRating = 0;
+            ProfilePicturePath = "wwwroot\\uploads\\default-avatar-icon-of-social-media-user-vector.jpg";
         }
 
         // Doctor-specific attributes

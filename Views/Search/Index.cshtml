@@ -3,15 +3,16 @@
 
 @{
     ViewData["Title"] = "Search Doctors";
+
 }
 
 <h1>@ViewData["Title"]</h1>
 
-
+<link rel="stylesheet" href="~/css/card.css" />
     <div class="input-group">
         <input type="text" class="form-control" name="searchString" id="searchBox" placeholder="Search by ID, Name, Specialization, or Email" autocomplete="off" style="width: 300px;" />
     <button class="btn btn-secondary ms-2" onclick="window.location.href='@Url.Action("Index")?searchString=' + document.getElementById('searchBox').value">Search</button>
-
+    
         <div class="dropdown ms-2">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="specializationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 Specialization
@@ -49,39 +50,38 @@
 
 @if (Model.Any())
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                
-                <th>Name</th>
-                <th>Specialization</th>
-                <th>Rating</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="container mt-4">
+        <div class="row">
             @foreach (var user in Model)
             {
-                <tr class="clickable-row" data-id="@user.Id">
-                    <td>@user.Id</td>
-                    <td>@user.UserName</td>
-                    
-                    <td>@user.FirstName @user.LastName</td>
-                    <td>@user.Specialization</td>
-                    <td>@user.AverageRating</td>
-                    <td>
-                        <a asp-controller="Users" asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-primary">Details</a>
-                    </td>
-                </tr>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="profile-pic">
+                            <img src="@(!string.IsNullOrEmpty(user.ProfilePicturePath) ? user.ProfilePicturePath : Url.Content("~/images/default-profile.png"))"
+                                 class="card-img-top" />
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">@user.FirstName @user.LastName</h5>
+                            <p class="card-text">
+                                <strong>@user.UserName<br /></strong>
+                                <strong>@user.Specialization<br /></strong>
+@*                                 <strong>Rating: @user.AverageRating/5 (@user.Reviews.Count)</strong> *@
+                            </p>
+                            <a asp-controller="Users" asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-primary">Details</a>
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
 }
 else
 {
     <p>No doctors found.</p>
 }
+
+
 <style>
     <style >
     .clickable-row {
@@ -127,3 +127,4 @@ else
         });
     </script>
 }
+

@@ -19,7 +19,9 @@ namespace AppointmentWebApp
 
         public async Task<IActionResult> Index(string searchString, string specialization, string filterBy)
         {
-            var allUsers = await _userManager.Users.ToListAsync();
+            var allUsers = await _userManager.Users
+                .Include(u => u.Reviews) // Ensure Reviews are included
+                .ToListAsync();
             var doctorUsers = allUsers.Where(u => _userManager.IsInRoleAsync(u, "Doctor").Result).ToList();
 
             // Search by searchString (ID, Name, Specialization, or Email)
@@ -52,18 +54,20 @@ namespace AppointmentWebApp
                 }
             }
 
-            var specializationCounts = doctorUsers.GroupBy(u => u.Specialization)
+            var specializationCounts = allUsers.Where(u => !string.IsNullOrWhiteSpace(u.Specialization)).
+                                                GroupBy(u => u.Specialization)
                                                   .Select(g => new
                                                   {
                                                       Specialization = g.Key,
                                                       Count = g.Count()
                                                   })
+                                                  .OrderBy(x => x.Specialization)
                                                   .ToList();
 
             ViewBag.SpecializationCounts = specializationCounts;
             ViewBag.SearchString = searchString;
-            ViewBag.Specialization = specialization; // Keep the selected specialization
-            ViewBag.FilterBy = filterBy; // Pass the current filter applied
+            ViewBag.Specialization = specialization; 
+            ViewBag.FilterBy = filterBy;
 
             return View(doctorUsers);
         }
