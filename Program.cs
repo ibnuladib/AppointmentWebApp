@@ -28,6 +28,7 @@ builder.Services.AddHostedService<AppointmentCheckerService>();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSignalR();
+builder.Services.AddScoped<InMemoryAuditLog>();
 
 var app = builder.Build();
 
@@ -45,6 +46,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapHub<NotificationHub>("/notificationHub");
+app.MapHub<LogHub>("/logHub");
 
 app.MapControllerRoute(
     name: "default",

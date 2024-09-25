@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using AppointmentWebApp.Models;
+using AppointmentWebApp.Services;
 
 namespace AppointmentWebApp.Areas.Identity.Pages.Account
 {
@@ -23,12 +24,14 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly InMemoryAuditLog _inMemoryAuditLog;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, InMemoryAuditLog inMemoryAuditLog)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
+            _inMemoryAuditLog = inMemoryAuditLog;
         }
 
         /// <summary>
@@ -117,9 +120,15 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
                     _logger.LogInformation("User logged in.");
-                    InMemoryAuditLog.Log($"User {Input.Email} signed in.");
-                    return LocalRedirect(returnUrl);
+                    await _inMemoryAuditLog.Log($" ID: {user.Id}, Email: {user.Email} signed in.");
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        return RedirectToAction("Index", "Admin"); // Redirect to Admin/Index
+                    }
+                    else {return LocalRedirect(returnUrl);
+}
                 }
                 if (result.RequiresTwoFactor)
                 {
