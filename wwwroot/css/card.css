@@ -16,7 +16,7 @@
 /* Adjust the profile picture styling */
 .profile-pic {
     width: 100px;
-    height: 100px;
+    height: 200px;
     background-color: #e0e0e0;
     display: flex;
     align-items: center;

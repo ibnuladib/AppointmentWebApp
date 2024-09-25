@@ -107,7 +107,9 @@ namespace AppointmentWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             var reviews = _context.Reviews.ToListAsync();    
-            return View("Index");
+           // return View("Index");
+            return View(await reviews);
+
         }
 
 

@@ -54,18 +54,20 @@ namespace AppointmentWebApp
                 }
             }
 
-            var specializationCounts = allUsers.GroupBy(u => u.Specialization)
+            var specializationCounts = allUsers.Where(u => !string.IsNullOrWhiteSpace(u.Specialization)).
+                                                GroupBy(u => u.Specialization)
                                                   .Select(g => new
                                                   {
                                                       Specialization = g.Key,
-                                                      //Count = g.Count()
+                                                      Count = g.Count()
                                                   })
+                                                  .OrderBy(x => x.Specialization)
                                                   .ToList();
 
             ViewBag.SpecializationCounts = specializationCounts;
             ViewBag.SearchString = searchString;
-            ViewBag.Specialization = specialization; // Keep the selected specialization
-            ViewBag.FilterBy = filterBy; // Pass the current filter applied
+            ViewBag.Specialization = specialization; 
+            ViewBag.FilterBy = filterBy;
 
             return View(doctorUsers);
         }
