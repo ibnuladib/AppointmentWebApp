@@ -54,13 +54,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Patient)
             .WithMany()  // Each patient can leave multiple reviews (but one per doctor)
-            .HasForeignKey(r => r.PatientId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey(r => r.PatientId);
+
 
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Doctor)
             .WithMany()  // Each doctor can have many reviews
-            .HasForeignKey(r => r.DoctorId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey(r => r.DoctorId);
+
+
     }
 }
