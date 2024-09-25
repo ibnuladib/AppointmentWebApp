@@ -2,226 +2,274 @@
     ViewData["Title"] = "Baymax Care";
     Layout = null;
 }
+<!DOCTYPE html>
+<style>
+    /* General body styles for better presentation */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f4f8;
+    color: #333;
+}
 
+/* Blueish Header */
+header {
+    background: linear-gradient(90deg, #0079c2 0%, #004e8c 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1000;
+}
+
+/* Styling for the header text */
+header h1 {
+    margin: 0;
+    font-size: 36px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+/* Subtitle or tagline for the header */
+header p {
+    font-size: 18px;
+    font-weight: 300;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+/* Navigation bar inside the header */
+nav {
+    background-color: #005a92;
+    padding: 15px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation links */
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+/* Hover effect for navigation links */
+nav a:hover {
+    color: #9ed2f2;
+    text-shadow: 0 0 10px rgba(158, 210, 242, 0.7);
+}
+
+/* Responsive styling for smaller screens */
+@@media (max-width: 768px) {
+    header h1 {
+        font-size: 28px;
+    }
+    
+    nav a {
+        margin: 0 10px;
+    }
+}
+
+
+    .hero {
+        background-image: url('https://via.placeholder.com/1600x500');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 120px 20px;
+        text-align: center;
+        box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero h2 {
+        font-size: 48px;
+        margin: 0;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero p {
+        font-size: 24px;
+        margin-top: 20px;
+        font-weight: 300;
+    }
+
+    .content {
+        padding: 60px 20px;
+        text-align: center;
+        background-color: #fff;
+    }
+
+    .content h3 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        letter-spacing: 1.5px;
+    }
+
+    .content p {
+        font-size: 18px;
+        margin-bottom: 30px;
+        line-height: 1.8;
+        max-width: 800px;
+        margin: auto;
+        color: #555;
+    }
+
+    .features {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 30px;
+        padding: 40px 20px;
+        background-color: #f4f4f4;
+    }
+
+    .feature-box {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 28%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
+    }
+
+    .feature-box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-box img {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+
+    .feature-box h4 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #0079c2;
+    }
+
+    .feature-box p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+    }
+
+    footer {
+        background-color: #0079c2;
+        color: white;
+        padding: 30px;
+        text-align: center;
+        margin-top: 40px;
+        font-size: 16px;
+        letter-spacing: 1px;
+    }
+
+    footer p {
+        margin: 0;
+    }
+
+    @@media (max-width: 768px) {
+        .features {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .feature-box {
+            width: 90%;
+        }
+
+        .hero h2 {
+            font-size: 36px;
+        }
+
+        .hero p {
+            font-size: 20px;
+        }
+
+        nav a {
+            margin: 0 10px;
+        }
+    }
+</style>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Services Landing Page</title>
-
-    <!-- CSS Styles -->
-    <style>
-        /* Global Styles */
-        .services {
-            padding: 4rem 2rem;
-            text-align: center;
-            background-color: #f0f4f8;
-        }
-
-            .services h2 {
-                font-size: 2.5rem;
-                margin-bottom: 2rem;
-            }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 2rem;
-        }
-
-        .service-item {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-            .service-item img {
-                width: 4rem;
-                height: 4rem;
-                margin-bottom: 1rem;
-            }
-
-            .service-item h3 {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-            }
-
-            .service-item p {
-                font-size: 1.1rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .service-item .learn-more {
-                display: inline-block;
-                background-color: #4a5568;
-                color: white;
-                padding: 0.75rem 1.5rem;
-                border-radius: 0.25rem;
-                text-decoration: none;
-                font-size: 1.1rem;
-                transition: background-color 0.3s;
-            }
-
-                .service-item .learn-more:hover {
-                    background-color: #6b7280;
-                }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #f0f4f8;
-        }
-
-        /* Navigation Bar Styles */
-        .navbar {
-            background-color: #000000;
-            padding: .5em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar .logo {
-            color: rgb(247, 237, 237);
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        .navbar .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 1.5em;
-        }
-
-        .navbar .nav-links li {
-            display: inline;
-        }
-
-        .navbar .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.1em;
-        }
-
-        .navbar .nav-links a:hover {
-            color: #e9c46a;
-        }
-
-        /* Landing Section Styles */
-        .landing-section {
-            height: 100vh;
-            background: url('healthcare-banner.jpg') no-repeat center center/cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-        }
-
-        .landing-section .landing-text h1 {
-            font-size: 3em;
-            margin-bottom: 0.5em;
-        }
-
-        .landing-section .landing-text p {
-            font-size: 1.2em;
-            margin-bottom: 1em;
-        }
-
-        .landing-section .btn {
-            background-color: #e76f51;
-            padding: 0.8em 2em;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .landing-section .btn:hover {
-            background-color: #f4a261;
-        }
-
-        /* About, Services, Contact Section Styles */
-        section {
-            padding: 4em 2em;
-            text-align: center;
-        }
-
-        #about, #services, #contact {
-            background-color: #fff;
-            margin: 1em 0;
-        }
-
-        #services ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        #services li {
-            font-size: 1.1em;
-            margin: 0.5em 0;
-        }
-    </style>
-</head>
 <body>
+<header>
+    <h1>Welcome to Healthcare Services</h1>
+</header>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="logo">BayMax Healthcare </div>
-        <ul class="nav-links"
-            <li>
-                <a href="@Url.Page("/Account/Login", new { area = "Identity" })">log in</a>
-                </li>
-            <li><a href="registerlink">Register</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<nav>
+     <a class="link_color_change" href="@Url.Page("/Account/Login", new { area = "Identity" })">Log in</a>
+        <a class="link_color_change" href="@Url.Page("/Account/Register", new { area = "Identity" })">Register</a>
+    <a class="link_color_change" href="#contact">Contact</a>
+</nav>
 
-    <!-- Landing Section -->
-    <section id="home" class="landing-section" style=" height: 50vh; background-image: url('your-image.jpg'); background-size: cover; background-position: center; position: relative;">
-        <!-- Optional Overlay for Better Text Visibility -->
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);"></div>
+<section class="hero">
+    <h2>Compassionate Care for Your Health</h2>
+    <p>Dedicated to providing the best healthcare for you and your family.</p>
+</section>
 
-        <!-- Text Content -->
-        <div style="position: relative; z-index: 1; color: white; text-align: center; padding-top: 10vh;">
-            <h1>Welcome to Healthcare Services</h1>
-            <p>Your health is our priority. We provide top-quality medical services.</p>
-        </div>
-    </section>
+<section class="content">
+    <h3>Why Choose Us?</h3>
+    <p>
+        Our healthcare professionals are committed to delivering high-quality medical services. We offer a wide range of services from primary care to specialized treatments. We believe in personalized care, and our team works around the clock to ensure that your health is our top priority.
+    </p>
+</section>
 
-
-    <!-- find doctor, locations, appointment section -->
-    <section class="services">
-        <h2>Our Services</h2>
-        <div class="services-grid">
-            <div class="service-item">
-                <img src="" alt="Icon1">
-                <h3>Appointment</h3>
-                <p>Book an Appointment</p>
-                <a href="#" class="learn-more">Book an Appointment</a>
-            </div>
-            <div class="service-item">
+<section class="features">
+    <div class="features">
+        <ul class="features">
+            <li class="feature-box">
                 <img src="" alt="Icon2">
-                <h3>Search for Doctors</h3>
-                <p>Search for doctors</p>
-                <a href="#" class="learn-more">Search for doctor</a>
-            </div>
-            <div class="service-item">
-                <img src="" alt="Icon3">
-                <h3>Make Account</h3>
-                <p>Make an Account</p>
-                <a href="#" class="learn-more">Make an Account</a>
-            </div>
-        </div>
-    </section>
+                <a  href="https://www.google.com/maps" target="_blank" style="color: inherit; text-decoration: none;">
+                    <h4 class="link_color_change">Expert Doctors</h4>
+                </a>
+                <p>Our team of doctors are experienced and ready to care for you with top-notch expertise.</p>
+            </li>
+            <li class="feature-box">
+                <img src="" alt="Icon1">
+                <a  href="https://www.google.com/maps" target="_blank" style="color: inherit; text-decoration: none;">
+                    <h4 class="link_color_change">Make An appointment</h4>
+                </a>
+                <p>We provide state-of-the-art facilities to ensure the highest standard of medical care.</p>
+            </li>
+            <li class="feature-box">
+                    <img src="" alt="Icon3">
+                <a  href="https://www.google.com/maps" target="_blank" style="color: inherit; text-decoration: none;">
+                    <h4 class="link_color_change">Locations</h4>
+                </a>
+                <p>Our emergency department is open 24/7 to handle all your urgent medical needs.</p>
+            </li>
+        </ul>
+    </div>
+</section>
 
-    <section id="contact" class="contact">
+<section id="contact" class="features">
+    <div class="featuure-box">
         <h2>Contact Us</h2>
-        <div class="contact-info">
-            <p>Address: 123 Health St, Wellness City, HC 56789</p>
-            <p>Email: contact@healthcare.com</p>
-            <p>Phone: +1 234 567 890</p>
-        </div>
-    </section>
-</body>
+        <p>Address: 123 Health St, Wellness City, HC 56789</p>
+        <p>Email: contact@healthcare.com</p>
+        <p>Phone: +1 234 567 890</p>
+    </div>
+</section>
 
+<footer>
+    <p>&copy; 2024 Healthcare Services. All rights reserved.</p>
+</footer>
+
+</body>
 </html>
