@@ -41,7 +41,9 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Symptoms" class="control-label"></label>
+                <div>
+                    <strong>Symptoms:</strong>
+                </div>
                 <input asp-for="Symptoms" class="form-control" />
                 <span asp-validation-for="Symptoms" class="text-danger"></span>
             </div>
@@ -53,20 +55,22 @@
             </div> *@
 
             <div class="form-group">
-@*                 <label asp-for="Amount" class="control-label"></label> *@
+                <div>
+                    <strong>Charge per Hour: </strong>
+                </div>
                 <input asp-for="Amount" class="form-control" value="@Model.Amount" readonly />
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary mt-3" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Search" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
