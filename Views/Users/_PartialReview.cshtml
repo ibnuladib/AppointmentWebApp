@@ -4,13 +4,17 @@
 
 @{
     var doctorId = Model.Id; // Doctor's ID if you're viewing a doctor profile
+
     var patientId = UserManager.GetUserId(User); // Logged-in user's ID
 }
 
-
-    <button class="btn btn-primary mt-3 custom-margin-right" id="rateDoctorBtn">Rate Doctor</button>
-<button class="btn btn-primary mt-3 custom-margin-right" onclick="toggleViewComment('@Model.Id')">View Comments</button>
-    <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3 custom-margin-right">List</a>
+<body>
+    <div>
+        <button class="btn btn-primary mt-3 custom-margin-right" id="rateDoctorBtn">Rate Doctor</button>
+        <button class="btn btn-primary mt-3 custom-margin-right" onclick="toggleViewComment('@Model.Id')">View Comments</button>
+        <a asp-controller="Search" asp-action="Index" class="btn btn-primary mt-3 custom-margin-right">List</a>
+    </div>
+   
 
     <div id="ratingForm" class="mt-4 p-4 border rounded" style="display: none;">
         <h5 class="text-lg font-semibold mb-2">Rate Doctor</h5>
@@ -25,6 +29,9 @@
     </div>
 
     <div id="messageAlert" class="alert alert-info mt-10" style="display: none;"></div>
+</body>
+
+
 
 
 
@@ -57,6 +64,7 @@
         const doctorId = '@doctorId';
         const patientId = '@patientId';
         let selectedRating = 0;
+        var reviewId ; // Track existing review ID if found
 
         const rateDoctorBtn = document.getElementById('rateDoctorBtn');
         const ratingForm = document.getElementById('ratingForm');
@@ -68,6 +76,26 @@
         function init() {
             createStars();
             attachEventListeners();
+            checkExistingReview(); // Check if the user has already reviewed the doctor
+        }
+
+        function checkExistingReview() {
+            fetch(`/Review/HasReview?doctorId=${doctorId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        reviewId = data.reviewId;
+                        selectedRating = data.rating;
+                        commentInput.value = data.comment;
+
+                        updateStars();
+                        rateDoctorBtn.textContent = 'Update Review'; // Change button to "Update"
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking for existing review:', error);
+                });
         }
 
         function createStars() {
@@ -115,22 +143,19 @@
                 showMessage('Please select a rating.', 'alert-warning');
                 return;
             }
-            if (doctorId == null) {
-                showMessage('No doctor','alert-warning');
-            }
-            if (patientId == null) {
-                showMessage('No patient', 'alert-warning');
-            }
 
             const review = {
                 DoctorId: doctorId,
-                PatientId: patientId,
+                PatientId: patientId, // Ensure this is passed from the server
                 Rating: selectedRating,
                 Comment: commentInput.value,
             };
 
-            fetch('/Review/Create', {
-                method: 'POST',
+            const url = reviewId ? `/Review/Update?reviewId=${reviewId}` : '/Review/Create';
+            const method = reviewId ? 'PUT' : 'POST';
+
+            fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
@@ -139,11 +164,13 @@
             })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Response Data: ", data);
                     if (data.success) {
-                        showMessage('Thank you for your review!', 'alert-success');
+                        showMessage('Your review has been submitted!', 'alert-success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
 
-                        //window.location.reload();
-                        resetForm();
                     } else {
                         showMessage('Error submitting review: ' + data.message, 'alert-danger');
                     }
@@ -152,6 +179,7 @@
                     console.error('Error submitting review:', error);
                     showMessage('Error submitting your review. Please try again.', 'alert-danger');
                 });
+
         }
 
         function showMessage(message, className) {
@@ -171,6 +199,7 @@
     })();
 
     document.addEventListener('DOMContentLoaded', doctorRatingComponent.init);
+
 </script>
 
 <style>
