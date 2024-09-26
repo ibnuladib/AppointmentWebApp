@@ -50,14 +50,14 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Patient)
             .WithMany()  // Each patient can leave multiple reviews (but one per doctor)
-            .HasForeignKey(r => r.PatientId);
-
+            .HasForeignKey(r => r.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Doctor)
             .WithMany()  // Each doctor can have many reviews
-            .HasForeignKey(r => r.DoctorId);
-
+            .HasForeignKey(r => r.DoctorId)
+            .OnDelete(DeleteBehavior.Restrict);
 
     }
 }
