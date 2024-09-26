@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using AppointmentWebApp.Models;
+using AppointmentWebApp.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,13 +31,15 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly InMemoryAuditLog _inMemoryAuditLog;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            InMemoryAuditLog inMemoryAuditLog)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +47,7 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _inMemoryAuditLog = inMemoryAuditLog;
         }
 
         [BindProperty]
@@ -214,6 +218,7 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
 
                     await _userManager.AddToRoleAsync(user, role);
                     _logger.LogInformation("User created a new account with password.");
+                    await _inMemoryAuditLog.Log($" ID: {user.Id}, Email: {user.Email} has been created.");
 
                     // Automatically sign in the user
                     await _signInManager.SignInAsync(user, isPersistent: false);

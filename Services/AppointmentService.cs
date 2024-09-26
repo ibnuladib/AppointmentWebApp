@@ -30,6 +30,7 @@ namespace AppointmentWebApp.Services
             // Set related entities
             appointment.Patient = patient;
             appointment.Doctor = doctor;
+            appointment.IsPaid = false;
 
             try
             {
