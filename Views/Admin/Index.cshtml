@@ -1,72 +1,45 @@
 ﻿@model AppointmentWebApp.Models.AdminViewModel
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .log-container {
-            width: 80%;
-            height: 100%;
-            background-color: #1e1e1e;
-            color: #c7c7c7;
-            overflow-y: auto;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .log-title {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            color: #ffffff;
-        }
-
-        #logList {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-            #logList li {
-                margin: 2px 0;
-                padding: 5px;
-                border-bottom: 1px solid #444;
-            }
-
-        .graph-container {
-            width: 60%;
-            height: 100%;
-            background-color: #ffffff;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-    </style>
-</head>
 <body>
     <div class="container">
-        <div class="log-container">
-            <div class="log-title">Real-time Logs</div>
-            <ul id="logList">
-                @await Html.PartialAsync("_PartialLogs", Model.Logs)
-            </ul>
+        <div class="logs-container">
+            @await Html.PartialAsync("_PartialLogs", Model.Logs)
         </div>
-        <div class="graph-container">
-            @await Html.PartialAsync("_PartialGraph", Model.AppointmentCounts)
+        <div class="main-container">
+            <div class="graph-container">
+                @await Html.PartialAsync("_PartialGraph", Model.AppointmentCounts)
+            </div>
         </div>
     </div>
 </body>
-</html>
+<style>
+
+    .main-container{
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container {
+        display: flex;
+      /*   flex-direction: row; */
+ /*        justify-content: space-between; */
+        align-items: flex-start;
+        gap: 100px;
+        width: 100%;
+    }
+
+    .logs-container {
+        flex: 0 0 auto;
+        width: 600 px;
+        max-width: 600px;
+        min-width: 600px;
+        overflow-x: auto;
+    }
+
+    .graph-container {
+        flex: 1 1 auto;
+        min-width: 0;
+        
+    }
+</style>
