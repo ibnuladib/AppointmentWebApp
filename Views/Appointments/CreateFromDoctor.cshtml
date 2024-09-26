@@ -2,34 +2,40 @@
 
 @{
     ViewData["Title"] = "Create";
+    var name = Model.Doctor.FirstName +" "+ Model.Doctor.LastName;
+    var name2 = Model.Patient.FirstName + " " + Model.Patient.LastName;
 }
 
-<h1>Create</h1>
-
-<h4>Appointment</h4>
+<h1>Create Appointment</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" method="post">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <!-- DoctorId Field: Pre-filled if value is present -->
             <div class="form-group">
-                <label asp-for="DoctorId" class="control-label"></label>
-                <input asp-for="DoctorId" class="form-control" value="@Model.DoctorId" />
+                <input asp-for="DoctorId" class="form-control" value="@Model.DoctorId" readonly />
                 <span asp-validation-for="DoctorId" class="text-danger"></span>
             </div>
-
-            <!-- PatientId Field: Pre-filled if value is present -->
             <div class="form-group">
-                <label asp-for="PatientId" class="control-label"></label>
-                <input asp-for="PatientId" class="form-control" value="@Model.PatientId" />
+                <div class="form-control-plaintext">
+                    <strong> Doctor Name :</strong> @name
+                </div>
+            </div>
+            <div class="form-group">
+                <input asp-for="PatientId" class="form-control" value="@Model.PatientId" readonly />
                 <span asp-validation-for="PatientId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="form-control-plaintext">
+                    <strong> Patient Name :</strong> @name2
+                </div>
             </div>
 
             <div class="form-group">
-                <label asp-for="AppointmentDate" class="control-label"></label>
+                <div>
+                    <strong> Set Appointment Date:</strong>
+                </div>
                 <input asp-for="AppointmentDate" class="form-control" />
                 <span asp-validation-for="AppointmentDate" class="text-danger"></span>
             </div>
@@ -40,15 +46,15 @@
                 <span asp-validation-for="Symptoms" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+@*             <div class="form-group">
                 <label asp-for="IsPaid" class="control-label"></label>
                 <input asp-for="IsPaid" type="checkbox" class="form-check-input" />
                 <span asp-validation-for="IsPaid" class="text-danger"></span>
-            </div>
+            </div> *@
 
             <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" value="@Model.ConsultationFeesPerHour" />
+@*                 <label asp-for="Amount" class="control-label"></label> *@
+                <input asp-for="Amount" class="form-control" value="@Model.Amount" readonly />
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
 

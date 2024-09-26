@@ -19,14 +19,15 @@ namespace AppointmentWebApp.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHubContext<NotificationHub> _notificationHubContext;
+        private readonly InMemoryAuditLog _inMemoryAuditLog;
 
-
-        public AppointmentsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, AppointmentService appointmentService, IHubContext<NotificationHub> notificationHubContext) /*IHubContext<NotificationHub> notificationHubContext*/
+        public AppointmentsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, AppointmentService appointmentService, IHubContext<NotificationHub> notificationHubContext, InMemoryAuditLog inMemoryAuditLog ) /*IHubContext<NotificationHub> notificationHubContext*/
         {
             _appointmentService = appointmentService;
             _context = context;
             _userManager = userManager;
             _notificationHubContext = notificationHubContext;
+            _inMemoryAuditLog = inMemoryAuditLog;
         }
 
         private bool AppointmentExists(int id)
@@ -118,6 +119,7 @@ namespace AppointmentWebApp.Controllers
                         string message1 = "You have a new Transaction.";
                         await _notificationHubContext.Clients.User(patientId).SendAsync("ReceiveNotification", message1);
                     }
+                    await _inMemoryAuditLog.Log($" ID: {patientId}, Email: {patient.Email} booked an appointment with ID: {doctorId}, Email: {doctor.Email}");
                     // Redirect to a confirmation page or the index page
                     return RedirectToAction(nameof(Index));
                 }
@@ -137,13 +139,16 @@ namespace AppointmentWebApp.Controllers
 
         public async Task<IActionResult> CreateFromDoctor(string? doctorId = null, string? patientId = null)
         {
+            var patient = await _userManager.FindByIdAsync(patientId);
             var doctor = await _userManager.FindByIdAsync(doctorId);
             var amount = doctor.ConsultationFeesPerHour;
             var appointment = new Appointment
             {
                 DoctorId = doctorId,
                 PatientId = patientId,
-                Amount = amount
+                Amount = (decimal)amount,
+                Doctor = doctor,
+                Patient = patient
 
             };
 
