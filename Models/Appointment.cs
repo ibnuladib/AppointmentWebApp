@@ -24,11 +24,11 @@ namespace AppointmentWebApp.Models
         public string Symptoms { get; set; }
         [Required]
         public bool IsPaid { get; set; }
-        [Required]
         public decimal Amount { get; set; }
 
         public Appointment() {
             Status = "Up Coming";
+            IsPaid = false;
         }
 
     }
