@@ -1,9 +1,45 @@
-﻿@model List<string>
+﻿@model AppointmentWebApp.Models.AdminViewModel
+<body>
+    <div class="container">
+        <div class="logs-container">
+            @await Html.PartialAsync("_PartialLogs", Model.Logs)
+        </div>
+        <div class="main-container">
+            <div class="graph-container">
+                @await Html.PartialAsync("_PartialGraph", Model.AppointmentCounts)
+            </div>
+        </div>
+    </div>
+</body>
+<style>
 
+    .main-container{
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
 
-<div>
-    <aside>
-        @await Html.PartialAsync("_PartialLogs")
-    </aside>
+    .container {
+        display: flex;
+      /*   flex-direction: row; */
+ /*        justify-content: space-between; */
+        align-items: flex-start;
+        gap: 100px;
+        width: 100%;
+    }
 
-</div>
+    .logs-container {
+        flex: 0 0 auto;
+        width: 600 px;
+        max-width: 600px;
+        min-width: 600px;
+        overflow-x: auto;
+    }
+
+    .graph-container {
+        flex: 1 1 auto;
+        min-width: 0;
+        
+    }
+</style>
