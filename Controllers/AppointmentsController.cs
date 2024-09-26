@@ -130,6 +130,28 @@ namespace AppointmentWebApp.Controllers
             return View(appointment);
         }
 
+/*        public IActionResult CreateFromDoctor()
+        {
+            return View();
+        }*/
+
+        public async Task<IActionResult> CreateFromDoctor(string? doctorId = null, string? patientId = null)
+        {
+            var doctor = await _userManager.FindByIdAsync(doctorId);
+            var amount = doctor.ConsultationFeesPerHour;
+            var appointment = new Appointment
+            {
+                DoctorId = doctorId,
+                PatientId = patientId,
+                Amount = amount
+
+            };
+
+            return View(appointment);  // Ensure the `Appointment` model is passed here.
+        }
+
+
+
         [Authorize(Roles = "Admin, Patient")]
 
         // GET: Appointments/Edit/5
