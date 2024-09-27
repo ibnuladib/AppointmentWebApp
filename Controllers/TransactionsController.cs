@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppointmentWebApp.Models;
 using AppointmentWebApp.Data;
+using AppointmentWebApp.Services;
+using System.Numerics;
 
 namespace AppointmentWebApp.Controllers
 {
     public class TransactionsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public TransactionsController(ApplicationDbContext context)
+        private readonly InMemoryAuditLog _inMemoryAuditLog;
+        public TransactionsController(ApplicationDbContext context, InMemoryAuditLog inMemoryAuditLog)
         {
             _context = context;
+            _inMemoryAuditLog = inMemoryAuditLog;   
         }
 
         // GET: Transactions
@@ -178,10 +181,13 @@ namespace AppointmentWebApp.Controllers
             }
 
             existingTransaction.Status = "Paid";
+            existingTransaction.TransactionPaidDate = DateTime.Now;
             _context.Transactions.Update(existingTransaction);
 
             // Save changes to the database
             await _context.SaveChangesAsync();
+            await _inMemoryAuditLog.Log($" Transaction {existingTransaction.Id} has been paid for Appointment, ID:{existingTransaction.AppointmentId}");
+
 
             return Ok("Transaction status updated successfully");
         }

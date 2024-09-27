@@ -8,6 +8,11 @@
             <div class="graph-container">
                 @await Html.PartialAsync("_PartialGraph", Model.AppointmentCounts)
             </div>
+            <div>
+                <div class="graph-container">
+                    @await Html.PartialAsync("_PartialChart", Model.TransactionCounts)
+                </div>
+            </div>
         </div>
     </div>
 </body>
