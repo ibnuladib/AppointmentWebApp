@@ -216,13 +216,40 @@
 
             // Simulate payment processing delay
             setTimeout(() => {
-                // Close the payment popup
-                closePopup();
-
-                // Show the success message
-                document.getElementById("success-bg").style.display = "flex";
-            }, 100);
+                
+                // Get the transaction ID from the model directly
+                const transactionId = '@Model.Id'; // Use Razor syntax to get the ID
+                const url =`/Transactions/UpdateTransactionStatus?reviewId=${transactionId}`
+                // Example AJAX request to update the transaction status
+                fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        transactionId: transactionId, // Pass the transaction ID
+                        status: 'Paid'                // Set the status to "Paid"
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Close the payment popup
+                            closePopup();
+                            // Show the success message
+                            document.getElementById("success-bg").style.display = "flex";
+                        } else {
+                            // Handle error (you can show an error message)
+                            alert("Failed to process payment. Please try again.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert("An error occurred. Please try again.");
+                    });
+            }, 100); // Simulated delay for payment processing
         }
+
+
 
         function closeSuccessPopup() {
             document.getElementById("success-bg").style.display = "none"; // Close success message

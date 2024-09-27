@@ -16,15 +16,14 @@ namespace AppointmentWebApp.Services
         private readonly ILogger<AppointmentCheckerService> _logger;
         private readonly AppointmentsController appointmentsController;
         private readonly IHubContext<NotificationHub> _notificationHubContext;
-        private readonly InMemoryAuditLog _inMemoryAuditLog;
+      //  private readonly InMemoryAuditLog _inMemoryAuditLog;
 
 
-        public AppointmentCheckerService(IServiceProvider serviceProvider, ILogger<AppointmentCheckerService> logger, IHubContext<NotificationHub> notificationHub, InMemoryAuditLog inMemoryAuditLog)
-        {
+        public AppointmentCheckerService(IServiceProvider serviceProvider, ILogger<AppointmentCheckerService> logger, IHubContext<NotificationHub> notificationHub) { 
             _serviceProvider = serviceProvider;
             _logger = logger;
             _notificationHubContext = notificationHub;
-            _inMemoryAuditLog = inMemoryAuditLog;   
+           // _inMemoryAuditLog = inMemoryAuditLog;   
         }
 
         protected override async Task ExecuteAsync(CancellationToken stop)
@@ -62,7 +61,7 @@ namespace AppointmentWebApp.Services
                                 await _notificationHubContext.Clients.User(appointment.DoctorId).SendAsync("ReceiveNotification", message);
                                 string message1 = "Your History has been Updated";
                                 await _notificationHubContext.Clients.User(appointment.PatientId).SendAsync("ReceiveNotification", message1);
-                                await _inMemoryAuditLog.Log($" ID: {patient.Id}, Email: {patient.Email} has completed an appointment with ID: {doctor.Id}, Email: {doctor.Email} .");
+                               // await _inMemoryAuditLog.Log($" ID: {patient.Id}, Email: {patient.Email} has completed an appointment with ID: {doctor.Id}, Email: {doctor.Email} .");
                             }
                             dbContext.Appointments.Update(appointment);
                             _logger.LogInformation($"Appointment ID {appointment.Id} has ended. Doctor's total appointments updated.");
