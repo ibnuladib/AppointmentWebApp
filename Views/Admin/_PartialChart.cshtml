@@ -1,12 +1,24 @@
-﻿    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+﻿@model List<AppointmentWebApp.Models.TransactionCount>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No transaction data available.</p>
+}
+else
+{
+    <div style="width: 600px; height: 300px;">
+        <canvas id="transactionsChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-            var ctx = document.getElementById('appointmentsChart').getContext('2d');
-        var appointmentsChart = new Chart(ctx, {
+        var ctx = document.getElementById('transactionsChart').getContext('2d');
+        var transactionsChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: @Html.Raw(Json.Serialize(Model.Select(ac => ac.Date.ToString("MM/dd")).ToList())), // Corrected Date Format
                 datasets: [{
-                    label: 'Total Appointments',
+                    label: 'Total Transactions',
                     data: @Html.Raw(Json.Serialize(Model.Select(ac => ac.Count).ToList())),
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -38,3 +50,4 @@
             }
         });
     </script>
+}

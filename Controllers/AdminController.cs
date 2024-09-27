@@ -27,24 +27,26 @@ namespace AppointmentWebApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var logs = InMemoryAuditLog.GetLogs(); // Assuming this returns a List<string>
-            var appointmentCounts = await GetDailyAppointmentCountsAsync(DateTime.Today.AddDays(-7), DateTime.Today);
+            var logs = InMemoryAuditLog.GetLogs(); 
+            var appointmentCounts = await GetDailyAppointmentCountsAsync(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(1));
+            var transactionCounts = await GetDailyTransactionCountsAsync(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(1));
 
             var viewModel = new AdminViewModel
             {
                 Logs = logs,
-                AppointmentCounts = appointmentCounts
+                AppointmentCounts = appointmentCounts,
+                TransactionCounts = transactionCounts
             };
 
-            return View(viewModel); // Pass the view model to the main view
+            return View(viewModel);
         }
 
 
         public async Task<List<AppointmentCount>> GetDailyAppointmentCountsAsync(DateTime startDate, DateTime endDate)
         {
             return await _context.Appointments
-                .Where(a => a.AppointmentDate >= startDate && a.AppointmentDate <= endDate)
-                .GroupBy(a => a.AppointmentDate.Date) // Group by the date only
+                .Where(a => a.AppointmentDate >= startDate && a.AppointmentDate <= endDate || a.AppointmentDate == endDate)
+                .GroupBy(a => a.AppointmentDate.Date) 
                 .Select(g => new AppointmentCount
                 {
                     Date = g.Key,
@@ -57,17 +59,46 @@ namespace AppointmentWebApp.Controllers
         public async Task<IActionResult> _PartialGraph()
         {
             var today = DateTime.Today;
-            var appointmentCounts = await GetDailyAppointmentCountsAsync(today.AddDays(-7), today); // Last 7 days
+            var appointmentCounts = await GetDailyAppointmentCountsAsync(today.AddDays(-7), today.AddDays(1));
 
-            // Debugging: Log or check the count
             if (appointmentCounts == null || !appointmentCounts.Any())
             {
-                // Optionally, log this to console or a logger
                 _logger.LogInformation("No appointment counts available.");
             }
 
-            return PartialView("_PartialGraph", appointmentCounts); // Ensure appointmentCounts is of type List<AppointmentCount>
+            return PartialView("_PartialGraph", appointmentCounts); 
         }
+
+
+        public async Task<IActionResult> _PartialChart()
+        {
+            var today = DateTime.Today;
+            var transactionCounts = await GetDailyTransactionCountsAsync(today.AddDays(-7), today);
+
+            if (transactionCounts == null || !transactionCounts.Any())
+            {
+                _logger.LogInformation("No transaction counts available for the last 7 days.");
+
+            }
+
+            return PartialView("_PartialChart", transactionCounts);
+        }
+
+        public async Task<List<TransactionCount>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
+        {
+            return await _context.Transactions
+                .Where(a => a.TransactionPaidDate >= startDate && a.TransactionPaidDate <= endDate)
+                .GroupBy(a => a.TransactionPaidDate.Date)  // Group by date only, ignoring time
+                .Select(g => new TransactionCount
+                {
+                    Date = g.Key,
+                    Count = g.Count()
+                })
+                .OrderBy(ac => ac.Date)
+                .ToListAsync();
+        }
+
+
 
     }
 }

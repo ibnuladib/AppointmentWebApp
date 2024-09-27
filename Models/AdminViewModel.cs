@@ -1,9 +1,13 @@
-﻿namespace AppointmentWebApp.Models
+﻿using System.Transactions;
+
+namespace AppointmentWebApp.Models
 {
     public class AdminViewModel
     {
-        public List<string> Logs { get; set; } // Example property for logs
-        public List<AppointmentCount> AppointmentCounts { get; set; } // Ensure this matches your appointment count model
+        public List<string> Logs { get; set; } 
+        public List<AppointmentCount> AppointmentCounts { get; set; } 
+
+        public List<TransactionCount> TransactionCounts { get; set; }
     }
 
 }

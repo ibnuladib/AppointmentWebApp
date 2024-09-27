@@ -1,7 +1,7 @@
 ﻿@model List<string>
 
 <div class="log-container">
-    <h4>Real-time Logs</h4>
+    <h6>Real-time Logs</h6>
     <ul id="logList">
         @if (Model != null && Model.Any())
         {
@@ -12,7 +12,6 @@
         }
         else
         {
-            <li>No logs available.</li>
         }
     </ul>
 
@@ -45,11 +44,11 @@
        /* width: 100%; /* Set the width of the container */
         /* max-width: 600px; /* Optional: set a maximum width */
         height: 600px; /* Set the height of the container */
-        border: 1px solid #333; /* Dark border for command prompt look */
+        border: 1px solid #008000; /* Dark border for command prompt look */
         border-radius: 5px; /* Rounded corners */
         /*padding: 10px; /* Padding inside the container */
-        background-color: #1e1e1e; /* Dark background color */
-        color: #c7c7c7; /* Light gray text color */
+        background-color: darkblue; /* Dark background color */
+        color: yellow; /* Light gray text color */
         overflow-y: auto; /* Enable vertical scrolling */
         font-family: 'Courier New', Courier, monospace; /* Monospace font */
     }
