@@ -6,24 +6,61 @@
 <a href="@Url.Action("Doctors", "Users")" class="btn btn-primary">Show Doctors</a>
 <a href="@Url.Action("Patients", "Users")" class="btn btn-primary">Show Patients</a>
 
+<!-- Search bar -->
+<div class="search-container mb-3">
+    <form method="get" asp-action="Index">
+        <div class="input-group">
+            <input type="text" class="form-control" name="searchQuery" placeholder="Search by ID, Name, Email, Phone..." />
+            <button class="btn btn-secondary" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
 <table class="table">
     <thead>
         <tr>
+            <th>Id</th>
             <th>Email</th>
             <th>UserName</th>
-            <th>Actions</th> 
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var user in Model)
         {
             <tr>
+                <th>@user.Id</th>
                 <td>@user.Email</td>
                 <td>@user.UserName</td>
                 <td>
                     <a asp-controller="Users" asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-primary">Details</a>
+                    <a asp-controller="Users" asp-action="Update" asp-route-id="@user.Id" class="btn btn-warning ms-2">Update</a>
+
+                    
+                    <button class="btn btn-danger ms-2" type="button" onclick="confirmDelete('@user.Id')">Delete</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<script>
+    function confirmDelete(userId) {
+        if (confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
+            // Create a form and submit the delete request
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/Users/DeleteConfirmed';
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'id';
+            input.value = userId;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
+
