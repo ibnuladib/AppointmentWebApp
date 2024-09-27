@@ -162,22 +162,29 @@ namespace AppointmentWebApp.Controllers
         }
 
         [HttpPut]
-
-        public async Task<IActionResult> UpdateTransactionStatus(int Id,[FromBody] Transaction transaction)
+        public async Task<IActionResult> UpdateTransactionStatus(int Id, [FromBody] Transaction transaction)
         {
-            var existingtransaction = await _context.Transactions.FindAsync(Id);
-            if (transaction == null)
+            // Fetch the existing transaction from the database using the given ID
+            var existingTransaction = await _context.Transactions.FindAsync(Id);
+            if (existingTransaction == null)
             {
                 return NotFound("Transaction not found");
             }
 
-            // Update the status to "Paid"
-            transaction.Status = "Paid";
-            _context.Transactions.Update(existingtransaction);
+            // Update the status to "Paid" if the existing status is not already "Paid"
+            if (existingTransaction.Status == "Paid")
+            {
+                return BadRequest("Transaction is already marked as 'Paid'");
+            }
 
-            await _context.SaveChangesAsync(); // Save changes to the database
+            existingTransaction.Status = "Paid";
+            _context.Transactions.Update(existingTransaction);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
 
             return Ok("Transaction status updated successfully");
         }
+
     }
 }

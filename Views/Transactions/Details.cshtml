@@ -210,44 +210,43 @@
                 document.getElementById("card-details").style.display = "block";
             }
         }
-
+        const transactionId = '@Model.Id';
         function submitPayment(event) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault();  // Prevent form submission
 
-            // Simulate payment processing delay
-            setTimeout(() => {
-                
-                // Get the transaction ID from the model directly
-                const transactionId = '@Model.Id'; // Use Razor syntax to get the ID
-                const url =`/Transactions/UpdateTransactionStatus?reviewId=${transactionId}`
-                // Example AJAX request to update the transaction status
-                fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        transactionId: transactionId, // Pass the transaction ID
-                        status: 'Paid'                // Set the status to "Paid"
-                    })
+            const transaction = {
+                Status: 'Paid'
+            };
+
+            const url = `/Transactions/UpdateTransactionStatus?Id=${transactionId}`;
+
+            fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(transaction)
+            })
+                .then(response => response.text())  // Use `text()` to parse the response as string
+                .then(data => {
+                    if (data === "Transaction status updated successfully") {
+                        closePopup();  // Close the payment popup
+                        document.getElementById("success-bg").style.display = "flex";  // Show success message
+
+                        // Set a short timeout to allow the user to see the success message, then reload the page
+                        setTimeout(() => {
+                            location.reload();  // Reload the page to reflect updated status
+                        }, 1000);  // Adjust the timeout as necessary
+                    } else {
+                        alert("Failed to process payment. Please try again.");
+                    }
                 })
-                    .then(response => {
-                        if (response.ok) {
-                            // Close the payment popup
-                            closePopup();
-                            // Show the success message
-                            document.getElementById("success-bg").style.display = "flex";
-                        } else {
-                            // Handle error (you can show an error message)
-                            alert("Failed to process payment. Please try again.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert("An error occurred. Please try again.");
-                    });
-            }, 100); // Simulated delay for payment processing
+                .catch(error => console.error("Error updating transaction status:", error));
         }
+
+
+
 
 
 
