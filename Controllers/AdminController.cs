@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AppointmentWebApp.Models; // Ensure this is included for InMemoryAuditLog
 using System.Collections.Generic;
-using AppointmentWebApp.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using AppointmentWebApp.Data;
+using AppointmentWebApp.Services;
 
 namespace AppointmentWebApp.Controllers
 {

@@ -160,5 +160,24 @@ namespace AppointmentWebApp.Controllers
         {
             return _context.Transactions.Any(e => e.Id == id);
         }
+
+        [HttpPut]
+
+        public async Task<IActionResult> UpdateTransactionStatus(int Id,[FromBody] Transaction transaction)
+        {
+            var existingtransaction = await _context.Transactions.FindAsync(Id);
+            if (transaction == null)
+            {
+                return NotFound("Transaction not found");
+            }
+
+            // Update the status to "Paid"
+            transaction.Status = "Paid";
+            _context.Transactions.Update(existingtransaction);
+
+            await _context.SaveChangesAsync(); // Save changes to the database
+
+            return Ok("Transaction status updated successfully");
+        }
     }
 }
