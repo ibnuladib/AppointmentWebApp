@@ -1,7 +1,8 @@
 ﻿@model List<string>
 
 <div class="log-container">
-    <h6>Real-time Logs</h6>
+
+    <h5 style="color: greenyellow"><----------------Welcome_Admin---------------></h5>
     <ul id="logList">
         @if (Model != null && Model.Any())
         {
@@ -17,6 +18,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.7/signalr.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             const connection = new signalR.HubConnectionBuilder()
@@ -25,10 +27,17 @@
 
             connection.on("ReceiveLogUpdate", function (message) {
                 const logElement = document.createElement("li");
-                const timestamp = new Date().toLocaleString();
 
-                let combinedString = timestamp.concat(": ", message);
-                logElement.textContent = combinedString;
+                const timestampElement = document.createElement("span");
+                timestampElement.style.color = "white";
+                timestampElement.textContent = new Date().toLocaleString();
+
+                let messageElement = document.createElement("span");
+                messageElement.textContent = `: ${message}`;
+
+                logElement.appendChild(timestampElement);
+                logElement.appendChild(messageElement);
+
                 document.getElementById("logList").appendChild(logElement);
             });
 
@@ -37,6 +46,7 @@
             });
         });
     </script>
+
 </div>
 
 <style>
@@ -60,6 +70,6 @@
         #logList li {
             margin: 2px 0; /* Space between log entries */
             padding: 5px; /* Padding for each log entry */
-            border-bottom: 1px solid #444; /* Darker separator line */
+            border-bottom: 1px dotted #00FF00; /* Bright green */
         }
 </style>

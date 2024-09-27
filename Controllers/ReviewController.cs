@@ -9,6 +9,7 @@ using AppointmentWebApp.Services;
 using System.Numerics;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AppointmentWebApp.Controllers
 {
@@ -121,13 +122,47 @@ namespace AppointmentWebApp.Controllers
 
             return PartialView("_RecentCommentsPartial", viewModel);
         }
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string ratingFilter)
         {
-            var reviews = _context.Reviews.ToListAsync();    
-            return View(await reviews);
+            var reviews = _context.Reviews.Include(r => r.Doctor).Include(r => r.Patient).AsQueryable();
 
+            // Role-based filtering
+            if (User.IsInRole("Patient"))
+            {
+                // Patients can only see their own reviews
+                var patientId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                reviews = reviews.Where(r => r.PatientId == patientId);
+            }
+            else if (User.IsInRole("Doctor"))
+            {
+                // Doctors can only see reviews related to them
+                var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                reviews = reviews.Where(r => r.DoctorId == doctorId);
+            }
+
+            // Searching by Review ID, Doctor Name, Patient Name, IDs
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                reviews = reviews.Where(r =>
+                    r.ReviewId.ToString().Contains(searchTerm) ||
+                    (r.Doctor.FirstName + " " + r.Doctor.LastName).Contains(searchTerm) ||
+                    (r.Patient.FirstName + " " + r.Patient.LastName).Contains(searchTerm) ||
+                    r.PatientId.Contains(searchTerm) ||
+                    r.DoctorId.Contains(searchTerm));
+            }
+
+            // Filtering by Rating
+            if (!string.IsNullOrEmpty(ratingFilter) && ratingFilter != "All Ratings")
+            {
+                if (int.TryParse(ratingFilter, out var rating))
+                {
+                    reviews = reviews.Where(r => r.Rating == rating);
+                }
+            }
+
+            return View(await reviews.ToListAsync());
         }
+
 
         public async Task<IActionResult> HasReview(string doctorId)
         {
@@ -173,7 +208,7 @@ namespace AppointmentWebApp.Controllers
                 var doctor = await _userManager.FindByIdAsync(review.DoctorId);
                 if (patient != null && doctor != null)
                 {
-                    await _inMemoryAuditLog.Log($" ID: {patient.Id}, Email: {patient.Email} booked an appointment with ID: {doctor.Id}, Email: {doctor.Email}");
+                    await _inMemoryAuditLog.Log($" ID: {patient.Id}, Email: {patient.Email} updated a review for ID: {doctor.Id}, Email: {doctor.Email}");
                 }
                 return Json(new { success = true, message = "Review updated successfully." });
             }

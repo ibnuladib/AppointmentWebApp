@@ -16,9 +16,13 @@
         
     </form>
 </div>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary mt-2">Create New</a>
+    </p>
+}
+
 @if(User.IsInRole("Admin"))
 {
    <table class="table">
@@ -150,7 +154,10 @@ else if(User.IsInRole("Patient"))
                         @Html.DisplayFor(modelItem => item.Amount)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary mt-2">Edit</a>
+                        }
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                         <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id">GoToTransaction</a>

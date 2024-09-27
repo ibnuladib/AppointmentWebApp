@@ -40,11 +40,18 @@
         max-width: 600px;
         min-width: 600px;
         overflow-x: auto;
+        padding: 20px;
     }
 
     .graph-container {
         flex: 1 1 auto;
         min-width: 0;
+    }
+     body{
+        overflow: hidden; /* Disable scrolling */
+        position: fixed; /* Lock the page at the top */
+        width: 100%; /* Ensure it covers the full width */
+    }
         
     }
 </style>
