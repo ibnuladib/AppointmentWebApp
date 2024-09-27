@@ -47,29 +47,32 @@ namespace AppointmentWebApp.Controllers
                 var appointments = await _context.Appointments
                     .Where(a => a.PatientId == userId)
                     .Include(a => a.Doctor)
+                    .OrderByDescending(a => a.AppointmentDate) 
                     .ToListAsync();
 
                 return View(appointments);
             }
-            else if (await _userManager.IsInRoleAsync(user, "Patient"))
+            else if (await _userManager.IsInRoleAsync(user, "Doctor"))
             {
                 var appointments = await _context.Appointments
                     .Where(a => a.DoctorId == userId)
                     .Include(a => a.Patient)
+                    .OrderByDescending(a => a.AppointmentDate) 
                     .ToListAsync();
                 return View(appointments);
             }
             else
             {
                 var appointments = await _context.Appointments
-                .Include(a => a.Patient)
-                .Include(a => a.Doctor)
-                .ToListAsync();
+                    .Include(a => a.Patient)
+                    .Include(a => a.Doctor)
+                    .OrderByDescending(a => a.AppointmentDate)
+                    .ToListAsync();
 
                 return View(appointments);
             }
-
         }
+
 
         // GET: Appointments/Details/5
         public async Task<IActionResult> Details(int id)

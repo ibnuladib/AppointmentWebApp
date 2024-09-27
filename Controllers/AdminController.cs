@@ -91,12 +91,14 @@ namespace AppointmentWebApp.Controllers
                 .GroupBy(a => a.TransactionPaidDate.Date)  // Group by date only, ignoring time
                 .Select(g => new TransactionCount
                 {
-                    Date = g.Key,
-                    Count = g.Count()
+                    Date = g.Key,                 // Date of the transactions
+                    Count = g.Count(),            // Total number of transactions for the day
+                    TotalEarnings = g.Sum(a => a.Amount) // Sum of the transaction amounts for the day
                 })
                 .OrderBy(ac => ac.Date)
                 .ToListAsync();
         }
+
 
 
 
