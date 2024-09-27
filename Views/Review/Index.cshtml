@@ -6,7 +6,24 @@
 
 <body>
     <h1>Reviews</h1>
-
+    <div class="search-container">
+        <form method="post" asp-action="Index">
+            <div class="input-group">
+                <input type="text" class="form-control" name="searchTerm" placeholder="Search by Review ID, Doctor Name, Patient Name, Patient ID, Doctor ID..." />
+                
+                <select id="ratingFilter" name="ratingFilter" class="select ms-4">
+                    <option value="">Filter Ratings</option>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select>
+                <button class="btn btn-secondary ms-4" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+    <div style="height: 20px;"></div>
     @if (Model == null || !Model.Any())
     {
         <p>No reviews available at the moment.</p>
@@ -34,6 +51,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Comment)
                     </th>
+                    <th>Actions</th> <!-- Add a header for the Actions column -->
                 </tr>
             </thead>
             <tbody>
@@ -58,9 +76,16 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Comment)
                         </td>
+                        <td>
+                            <form asp-action="DeleteConfirmed" asp-route-id="@item.ReviewId" method="post">
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                            </form>
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
     }
 </body>
+
+

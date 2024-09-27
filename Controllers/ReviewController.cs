@@ -5,6 +5,11 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using AppointmentWebApp.Services;
+using System.Numerics;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AppointmentWebApp.Controllers
 {
@@ -13,11 +18,13 @@ namespace AppointmentWebApp.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ReviewController> _logger;
-        public ReviewController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<ReviewController> logger)
+        private readonly InMemoryAuditLog _inMemoryAuditLog;
+        public ReviewController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<ReviewController> logger, InMemoryAuditLog inMemoryAuditLog)
         {
             _context = context; 
             _userManager = userManager;
             _logger = logger;
+            _inMemoryAuditLog = inMemoryAuditLog;
         }
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Review review)
@@ -27,8 +34,8 @@ namespace AppointmentWebApp.Controllers
                 if (ModelState.IsValid)
                 {
                     var patientId = _userManager.GetUserId(User);
+                    
 
-                    // Prevent duplicate reviews
                     var existingReview = await _context.Reviews
                         .FirstOrDefaultAsync(r => r.DoctorId == review.DoctorId && r.PatientId == patientId);
 
@@ -38,11 +45,17 @@ namespace AppointmentWebApp.Controllers
                     }
 
                     review.PatientId = patientId;
-                    review.DateCreated = DateTime.Now; // Set the date here
+                    review.DateCreated = DateTime.Now;
 
                     _context.Add(review);
                     await _context.SaveChangesAsync();
                     await UpdateAverageRating(review.DoctorId);
+                    var patient = await _userManager.GetUserAsync(User);
+                    var doctor = await _userManager.FindByIdAsync(review.DoctorId);
+                    if (patient != null && doctor != null)
+                    {
+                        await _inMemoryAuditLog.Log($" ID: {patient.Id}, Email: {patient.Email} left a review for ID: {doctor.Id}, Email: {doctor.Email}");
+                    }
                     return Json(new { success = true, message = "Review submitted successfully!" });
                 }
                 else
@@ -109,13 +122,47 @@ namespace AppointmentWebApp.Controllers
 
             return PartialView("_RecentCommentsPartial", viewModel);
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string ratingFilter)
         {
-            var reviews = _context.Reviews.ToListAsync();    
-           // return View("Index");
-            return View(await reviews);
+            var reviews = _context.Reviews.Include(r => r.Doctor).Include(r => r.Patient).AsQueryable();
 
+            // Role-based filtering
+            if (User.IsInRole("Patient"))
+            {
+                // Patients can only see their own reviews
+                var patientId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                reviews = reviews.Where(r => r.PatientId == patientId);
+            }
+            else if (User.IsInRole("Doctor"))
+            {
+                // Doctors can only see reviews related to them
+                var doctorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                reviews = reviews.Where(r => r.DoctorId == doctorId);
+            }
+
+            // Searching by Review ID, Doctor Name, Patient Name, IDs
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                reviews = reviews.Where(r =>
+                    r.ReviewId.ToString().Contains(searchTerm) ||
+                    (r.Doctor.FirstName + " " + r.Doctor.LastName).Contains(searchTerm) ||
+                    (r.Patient.FirstName + " " + r.Patient.LastName).Contains(searchTerm) ||
+                    r.PatientId.Contains(searchTerm) ||
+                    r.DoctorId.Contains(searchTerm));
+            }
+
+            // Filtering by Rating
+            if (!string.IsNullOrEmpty(ratingFilter) && ratingFilter != "All Ratings")
+            {
+                if (int.TryParse(ratingFilter, out var rating))
+                {
+                    reviews = reviews.Where(r => r.Rating == rating);
+                }
+            }
+
+            return View(await reviews.ToListAsync());
         }
+
 
         public async Task<IActionResult> HasReview(string doctorId)
         {
@@ -138,7 +185,8 @@ namespace AppointmentWebApp.Controllers
             {
                 _logger.LogInformation("Updating review with ID: {ReviewId}", reviewId);
                 var existingReview = await _context.Reviews.FindAsync(reviewId);
-                
+
+
                 if (existingReview == null || existingReview.PatientId != _userManager.GetUserId(User))
                 {
                     return Json(new { success = false, message = "Review not found." });
@@ -151,12 +199,17 @@ namespace AppointmentWebApp.Controllers
 
                 existingReview.Rating = review.Rating;
                 existingReview.Comment = review.Comment;
-                existingReview.DateCreated = DateTime.Now; // Add this if you track modification dates
+                existingReview.DateCreated = DateTime.Now; 
 
                 _context.Reviews.Update(existingReview);
                 await _context.SaveChangesAsync();
                 await UpdateAverageRating(existingReview.DoctorId);
-
+                var patient = await _userManager.FindByIdAsync(review.PatientId);
+                var doctor = await _userManager.FindByIdAsync(review.DoctorId);
+                if (patient != null && doctor != null)
+                {
+                    await _inMemoryAuditLog.Log($" ID: {patient.Id}, Email: {patient.Email} updated a review for ID: {doctor.Id}, Email: {doctor.Email}");
+                }
                 return Json(new { success = true, message = "Review updated successfully." });
             }
             catch (Exception ex)
@@ -166,6 +219,18 @@ namespace AppointmentWebApp.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review != null)
+            {
+                _context.Reviews.Remove(review);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
 
 

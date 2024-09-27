@@ -9,6 +9,7 @@ using AppointmentWebApp.Models;
 using AppointmentWebApp.Data;
 using AppointmentWebApp.Services;
 using System.Numerics;
+using System.Security.Claims;
 
 namespace AppointmentWebApp.Controllers
 {
@@ -23,12 +24,55 @@ namespace AppointmentWebApp.Controllers
         }
 
         // GET: Transactions
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string searchTerm = null, string statusFilter = null)
         {
-            var applicationDbContext = _context.Transactions.Include(t => t.Appointment);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the current user's ID
+            IQueryable<Transaction> transactionsQuery = _context.Transactions
+                .Include(t => t.Appointment)
+                    .ThenInclude(a => a.Patient) // Include Patient details
+                .Include(t => t.Appointment)
+                    .ThenInclude(a => a.Doctor); // Include Doctor details
+
+            // Check if the user is an Admin
+            bool isAdmin = User.IsInRole("Admin");
+
+            // Filter transactions based on the user's role
+            if (!isAdmin)
+            {
+                // If not admin, filter transactions involving the specific patient or doctor
+                transactionsQuery = transactionsQuery.Where(t =>
+                    t.Appointment.PatientId == userId || t.Appointment.DoctorId == userId);
+            }
+
+            // Search by Patient/Doctor FirstName + LastName, Patient/Doctor Id, TransactionId
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                transactionsQuery = transactionsQuery.Where(t =>
+                    t.Appointment.Patient.FirstName.Contains(searchTerm) ||
+                    t.Appointment.Patient.LastName.Contains(searchTerm) ||
+                    t.Appointment.Doctor.FirstName.Contains(searchTerm) ||
+                    t.Appointment.Doctor.LastName.Contains(searchTerm) ||
+                    t.Appointment.PatientId.ToString() == searchTerm ||
+                    t.Appointment.DoctorId.ToString() == searchTerm ||
+                    (t.Appointment.Patient.FirstName + " " + t.Appointment.Patient.LastName).Contains(searchTerm) ||
+                    (t.Appointment.Doctor.FirstName + " " + t.Appointment.Doctor.LastName).Contains(searchTerm) ||
+                    t.Appointment.Patient.Email.ToString() == searchTerm ||
+                    t.Appointment.Doctor.Email.ToString() == searchTerm ||
+                    t.Id.ToString() == searchTerm);
+            }
+
+            // If a status filter is provided, apply it
+            if (!string.IsNullOrEmpty(statusFilter))
+            {
+                transactionsQuery = transactionsQuery.Where(t => t.Status == statusFilter);
+            }
+
+            return View(await transactionsQuery.ToListAsync());
         }
 
+
+        [HttpGet]
         // GET: Transactions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -169,6 +213,7 @@ namespace AppointmentWebApp.Controllers
         {
             // Fetch the existing transaction from the database using the given ID
             var existingTransaction = await _context.Transactions.FindAsync(Id);
+            var existingAppointment = await _context.Appointments.FindAsync(Id);
             if (existingTransaction == null)
             {
                 return NotFound("Transaction not found");
@@ -181,6 +226,11 @@ namespace AppointmentWebApp.Controllers
             }
 
             existingTransaction.Status = "Paid";
+            existingTransaction.PaymentMethod = transaction.PaymentMethod;
+            if (existingAppointment != null)
+            {
+                existingAppointment.IsPaid = true;
+            }
             existingTransaction.TransactionPaidDate = DateTime.Now;
             _context.Transactions.Update(existingTransaction);
 

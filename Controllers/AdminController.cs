@@ -44,17 +44,35 @@ namespace AppointmentWebApp.Controllers
 
         public async Task<List<AppointmentCount>> GetDailyAppointmentCountsAsync(DateTime startDate, DateTime endDate)
         {
-            return await _context.Appointments
-                .Where(a => a.AppointmentDate >= startDate && a.AppointmentDate <= endDate || a.AppointmentDate == endDate)
-                .GroupBy(a => a.AppointmentDate.Date) 
+            var allDates = Enumerable.Range(0, (endDate - startDate).Days )
+                                      .Select(offset => startDate.AddDays(offset).Date)
+                                      .ToList();
+
+            var appointmentData = await _context.Appointments
+                .Where(a => a.AppointmentDate >= startDate && a.AppointmentDate <= endDate)
+                .GroupBy(a => a.AppointmentDate.Date)  
                 .Select(g => new AppointmentCount
                 {
-                    Date = g.Key,
-                    Count = g.Count()
+                    Date = g.Key,        
+                    Count = g.Count()     
+                })
+                .ToListAsync();
+
+            var completeData = allDates.GroupJoin(
+                appointmentData,
+                date => date,
+                appointment => appointment.Date,
+                (date, appointments) => appointments.FirstOrDefault() ?? new AppointmentCount
+                {
+                    Date = date,
+                    Count = 0
                 })
                 .OrderBy(ac => ac.Date)
-                .ToListAsync();
+                .ToList();
+
+            return completeData;
         }
+
 
         public async Task<IActionResult> _PartialGraph()
         {
@@ -86,17 +104,38 @@ namespace AppointmentWebApp.Controllers
 
         public async Task<List<TransactionCount>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
         {
-            return await _context.Transactions
+            var allDates = Enumerable.Range(0, (endDate - startDate).Days)
+                                      .Select(offset => startDate.AddDays(offset).Date)
+                                      .ToList();
+
+            var transactionData = await _context.Transactions
                 .Where(a => a.TransactionPaidDate >= startDate && a.TransactionPaidDate <= endDate)
-                .GroupBy(a => a.TransactionPaidDate.Date)  // Group by date only, ignoring time
+                .GroupBy(a => a.TransactionPaidDate.Date)  
                 .Select(g => new TransactionCount
                 {
-                    Date = g.Key,
-                    Count = g.Count()
+                    Date = g.Key,                 
+                    Count = g.Count(),        
+                    TotalEarnings = g.Sum(a => a.Amount) 
+                })
+                .ToListAsync();
+
+            var completeData = allDates.GroupJoin(
+                transactionData,
+                date => date,
+                transaction => transaction.Date,
+                (date, transactions) => transactions.FirstOrDefault() ?? new TransactionCount
+                {
+                    Date = date,
+                    Count = 0,
+                    TotalEarnings = 0
                 })
                 .OrderBy(ac => ac.Date)
-                .ToListAsync();
+                .ToList();
+
+            return completeData;
         }
+
+
 
 
 

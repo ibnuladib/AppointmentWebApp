@@ -30,13 +30,11 @@
             </ul>
 
         </div>
-    <!-- Filter by Rating, preserving search and specialization -->
     <button class="btn btn-secondary ms-2"
             onclick="window.location.href='@Url.Action("Index", new { searchString = ViewBag.SearchString, specialization = ViewBag.Specialization, filterBy = "rating" })'">
         Filter by Rating
     </button>
 
-    <!-- Filter by Experience, preserving search and specialization -->
     <button class="btn btn-secondary ms-2"
             onclick="window.location.href='@Url.Action("Index", new { searchString = ViewBag.SearchString, specialization = ViewBag.Specialization, filterBy = "experience" })'">
         Filter by Experience
