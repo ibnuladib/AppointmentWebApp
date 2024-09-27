@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using AppointmentWebApp.Services;
 using System.Numerics;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppointmentWebApp.Controllers
 {
@@ -32,7 +33,6 @@ namespace AppointmentWebApp.Controllers
                 if (ModelState.IsValid)
                 {
                     var patientId = _userManager.GetUserId(User);
-                    var patient = await _userManager.GetUserAsync(User);
                     
 
                     var existingReview = await _context.Reviews
@@ -49,7 +49,12 @@ namespace AppointmentWebApp.Controllers
                     _context.Add(review);
                     await _context.SaveChangesAsync();
                     await UpdateAverageRating(review.DoctorId);
-                    await _inMemoryAuditLog.Log($" ID: {patientId}, Email: {patient.Email} booked an appointment with ID: {review.DoctorId}, Email: {review.Doctor.Email}");
+                    var patient = await _userManager.GetUserAsync(User);
+                    var doctor = await _userManager.FindByIdAsync(review.DoctorId);
+                    if (patient != null && doctor != null)
+                    {
+                        await _inMemoryAuditLog.Log($" ID: {patient.Id}, Email: {patient.Email} left a review for ID: {doctor.Id}, Email: {doctor.Email}");
+                    }
                     return Json(new { success = true, message = "Review submitted successfully!" });
                 }
                 else
@@ -116,6 +121,7 @@ namespace AppointmentWebApp.Controllers
 
             return PartialView("_RecentCommentsPartial", viewModel);
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var reviews = _context.Reviews.ToListAsync();    
@@ -144,7 +150,8 @@ namespace AppointmentWebApp.Controllers
             {
                 _logger.LogInformation("Updating review with ID: {ReviewId}", reviewId);
                 var existingReview = await _context.Reviews.FindAsync(reviewId);
-                
+
+
                 if (existingReview == null || existingReview.PatientId != _userManager.GetUserId(User))
                 {
                     return Json(new { success = false, message = "Review not found." });
@@ -162,7 +169,12 @@ namespace AppointmentWebApp.Controllers
                 _context.Reviews.Update(existingReview);
                 await _context.SaveChangesAsync();
                 await UpdateAverageRating(existingReview.DoctorId);
-
+                var patient = await _userManager.FindByIdAsync(review.PatientId);
+                var doctor = await _userManager.FindByIdAsync(review.DoctorId);
+                if (patient != null && doctor != null)
+                {
+                    await _inMemoryAuditLog.Log($" ID: {patient.Id}, Email: {patient.Email} booked an appointment with ID: {doctor.Id}, Email: {doctor.Email}");
+                }
                 return Json(new { success = true, message = "Review updated successfully." });
             }
             catch (Exception ex)
