@@ -181,6 +181,7 @@ namespace AppointmentWebApp.Controllers
             }
 
             existingTransaction.Status = "Paid";
+            existingTransaction.Appointment.IsPaid = true;
             existingTransaction.TransactionPaidDate = DateTime.Now;
             _context.Transactions.Update(existingTransaction);
 

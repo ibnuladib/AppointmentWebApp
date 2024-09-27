@@ -26,10 +26,10 @@ namespace AppointmentWebApp.Models
         public bool IsPaid { get; set; }
         public decimal Amount { get; set; }
 
-/*       public DateTime? AppointmentCreated { get; set; } = DateTime.Now;*/
+ //      public DateTime? AppointmentCreated { get; set; } = DateTime.Now;
 
         public Appointment() {
-            Status = "Up Coming";
+            Status = "UpComing";
             IsPaid = false;
         }
 

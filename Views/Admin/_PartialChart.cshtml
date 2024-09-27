@@ -14,7 +14,6 @@ else
     <script>
         var ctx = document.getElementById('transactionsChart').getContext('2d');
 
-        // Define an array of different shades of blue for styling
         var backgroundColors = [
             'rgba(54, 162, 235, 0.6)', // Light Blue
             'rgba(75, 192, 192, 0.6)', // Cyan
@@ -27,7 +26,6 @@ else
 
         var borderColors = backgroundColors.map(color => color.replace('0.6', '1')); // Use same colors for borders with higher opacity
 
-        // Get labels and data from the model
         var labels = @Html.Raw(Json.Serialize(Model.Select(ac => ac.Date.ToString("MM/dd")).ToList()));  // Dates
         var transactionCounts = @Html.Raw(Json.Serialize(Model.Select(ac => ac.Count).ToList()));        // Transaction Counts
         var totalEarnings = @Html.Raw(Json.Serialize(Model.Select(ac => ac.TotalEarnings).ToList()));    // Total Earnings

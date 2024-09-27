@@ -37,41 +37,51 @@ namespace AppointmentWebApp.Controllers
 
 
         // GET: Appointments
-        public async Task<IActionResult> Index()
+        // GET: Appointments
+        public async Task<IActionResult> Index(string searchQuery, string status)
         {
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
 
+            IQueryable<Appointment> appointmentsQuery = _context.Appointments
+                .Include(a => a.Patient)
+                .Include(a => a.Doctor);
+
             if (await _userManager.IsInRoleAsync(user, "Patient"))
             {
-                var appointments = await _context.Appointments
-                    .Where(a => a.PatientId == userId)
-                    .Include(a => a.Doctor)
-                    .OrderByDescending(a => a.AppointmentDate) 
-                    .ToListAsync();
-
-                return View(appointments);
+                appointmentsQuery = appointmentsQuery.Where(a => a.PatientId == userId);
             }
             else if (await _userManager.IsInRoleAsync(user, "Doctor"))
             {
-                var appointments = await _context.Appointments
-                    .Where(a => a.DoctorId == userId)
-                    .Include(a => a.Patient)
-                    .OrderByDescending(a => a.AppointmentDate) 
-                    .ToListAsync();
-                return View(appointments);
+                appointmentsQuery = appointmentsQuery.Where(a => a.DoctorId == userId);
             }
-            else
-            {
-                var appointments = await _context.Appointments
-                    .Include(a => a.Patient)
-                    .Include(a => a.Doctor)
-                    .OrderByDescending(a => a.AppointmentDate)
-                    .ToListAsync();
 
-                return View(appointments);
+            // Filter by status if provided
+            if (!string.IsNullOrEmpty(status))
+            {
+                appointmentsQuery = appointmentsQuery.Where(a => a.Status == status);
             }
+
+            // Perform the search if a search query is provided
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                appointmentsQuery = appointmentsQuery.Where(a =>
+                    a.Id.ToString().Contains(searchQuery) ||
+                    a.PatientId.Contains(searchQuery) ||
+                    a.DoctorId.Contains(searchQuery) ||
+                    (a.Patient.FirstName + " " + a.Patient.LastName).Contains(searchQuery) ||
+                    (a.Doctor.FirstName + " " + a.Doctor.LastName).Contains(searchQuery) ||
+                    a.Patient.Email.Contains(searchQuery) ||
+                    a.Doctor.Email.Contains(searchQuery));
+            }
+
+            var appointments = await appointmentsQuery
+                .OrderByDescending(a => a.AppointmentDate)
+                .ToListAsync();
+
+            return View(appointments);
         }
+
 
 
         // GET: Appointments/Details/5
@@ -123,7 +133,8 @@ namespace AppointmentWebApp.Controllers
                         await _notificationHubContext.Clients.User(patientId).SendAsync("ReceiveNotification", message1);
                     }
                     await _inMemoryAuditLog.Log($" ID: {patientId}, Email: {patient.Email} booked an appointment with ID: {doctorId}, Email: {doctor.Email}");
-                    // Redirect to a confirmation page or the index page
+                    await _inMemoryAuditLog.Log($"New Transaction has been created for ID: {patientId}, Email: {patient.Email}");
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -135,10 +146,44 @@ namespace AppointmentWebApp.Controllers
             return View(appointment);
         }
 
-/*        public IActionResult CreateFromDoctor()
+        [HttpPost]
+        public async Task<IActionResult> Search(string searchQuery)
         {
-            return View();
-        }*/
+            if (string.IsNullOrWhiteSpace(searchQuery))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+
+            IQueryable<Appointment> appointmentsQuery = _context.Appointments
+                .Include(a => a.Patient)
+                .Include(a => a.Doctor);
+
+            if (await _userManager.IsInRoleAsync(user, "Patient"))
+            {
+                appointmentsQuery = appointmentsQuery.Where(a => a.PatientId == userId);
+            }
+            else if (await _userManager.IsInRoleAsync(user, "Doctor"))
+            {
+                appointmentsQuery = appointmentsQuery.Where(a => a.DoctorId == userId);
+            }
+
+            var appointments = await appointmentsQuery.Where(a =>
+                a.Id.ToString().Contains(searchQuery) ||  
+                a.PatientId.Contains(searchQuery) ||      
+                a.DoctorId.Contains(searchQuery) ||       
+                (a.Patient.FirstName + " " + a.Patient.LastName).Contains(searchQuery) ||  
+                (a.Doctor.FirstName + " " + a.Doctor.LastName).Contains(searchQuery) ||    
+                a.Patient.Email.Contains(searchQuery) ||  
+                a.Doctor.Email.Contains(searchQuery))     
+                .OrderByDescending(a => a.AppointmentDate)
+                .ToListAsync();
+
+            return View("Index", appointments);
+        }
+
 
         public async Task<IActionResult> CreateFromDoctor(string? doctorId = null, string? patientId = null)
         {

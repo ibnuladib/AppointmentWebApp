@@ -18,7 +18,6 @@ namespace AppointmentWebApp.Services
 
         public async Task<Appointment> CreateAppointmentAsync(Appointment appointment)
         {
-            // Fetch patient and doctor from the database
             var patient = await _context.Users.FindAsync(appointment.PatientId);
             var doctor = await _context.Users.FindAsync(appointment.DoctorId);
 
@@ -26,19 +25,15 @@ namespace AppointmentWebApp.Services
             {
                 throw new ArgumentException("Patient or Doctor not found.");
             }
-
-            // Set related entities
             appointment.Patient = patient;
             appointment.Doctor = doctor;
             appointment.IsPaid = false;
 
             try
             {
-                // Add the appointment to the context
                 _context.Appointments.Add(appointment);
                 await _context.SaveChangesAsync();
 
-                // Create and add the corresponding transaction
                 var transaction = new Transaction
                 {
                     AppointmentId = appointment.Id,
@@ -52,12 +47,10 @@ namespace AppointmentWebApp.Services
                 _context.Transactions.Add(transaction);
                 await _context.SaveChangesAsync();
 
-                // Return the created appointment
                 return appointment;
             }
             catch (Exception ex)
             {
-                // Handle exceptions and log the error
                 throw new InvalidOperationException($"An error occurred while creating the appointment: {ex.Message}", ex);
             }
         }

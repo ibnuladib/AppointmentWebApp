@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using AppointmentWebApp.Services;
+using System.Numerics;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace AppointmentWebApp.Controllers
 {
@@ -13,11 +16,13 @@ namespace AppointmentWebApp.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ReviewController> _logger;
-        public ReviewController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<ReviewController> logger)
+        private readonly InMemoryAuditLog _inMemoryAuditLog;
+        public ReviewController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<ReviewController> logger, InMemoryAuditLog inMemoryAuditLog)
         {
             _context = context; 
             _userManager = userManager;
             _logger = logger;
+            _inMemoryAuditLog = inMemoryAuditLog;
         }
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Review review)
@@ -27,8 +32,9 @@ namespace AppointmentWebApp.Controllers
                 if (ModelState.IsValid)
                 {
                     var patientId = _userManager.GetUserId(User);
+                    var patient = await _userManager.GetUserAsync(User);
+                    
 
-                    // Prevent duplicate reviews
                     var existingReview = await _context.Reviews
                         .FirstOrDefaultAsync(r => r.DoctorId == review.DoctorId && r.PatientId == patientId);
 
@@ -38,11 +44,12 @@ namespace AppointmentWebApp.Controllers
                     }
 
                     review.PatientId = patientId;
-                    review.DateCreated = DateTime.Now; // Set the date here
+                    review.DateCreated = DateTime.Now;
 
                     _context.Add(review);
                     await _context.SaveChangesAsync();
                     await UpdateAverageRating(review.DoctorId);
+                    await _inMemoryAuditLog.Log($" ID: {patientId}, Email: {patient.Email} booked an appointment with ID: {review.DoctorId}, Email: {review.Doctor.Email}");
                     return Json(new { success = true, message = "Review submitted successfully!" });
                 }
                 else
@@ -112,7 +119,6 @@ namespace AppointmentWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             var reviews = _context.Reviews.ToListAsync();    
-           // return View("Index");
             return View(await reviews);
 
         }
@@ -151,7 +157,7 @@ namespace AppointmentWebApp.Controllers
 
                 existingReview.Rating = review.Rating;
                 existingReview.Comment = review.Comment;
-                existingReview.DateCreated = DateTime.Now; // Add this if you track modification dates
+                existingReview.DateCreated = DateTime.Now; 
 
                 _context.Reviews.Update(existingReview);
                 await _context.SaveChangesAsync();
@@ -166,6 +172,18 @@ namespace AppointmentWebApp.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+            if (review != null)
+            {
+                _context.Reviews.Remove(review);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
 
 

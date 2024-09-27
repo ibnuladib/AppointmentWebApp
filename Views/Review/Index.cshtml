@@ -34,6 +34,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Comment)
                     </th>
+                    <th>Actions</th> <!-- Add a header for the Actions column -->
                 </tr>
             </thead>
             <tbody>
@@ -58,9 +59,16 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Comment)
                         </td>
+                        <td>
+                            <form asp-action="DeleteConfirmed" asp-route-id="@item.ReviewId" method="post">
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                            </form>
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
     }
 </body>
+
+

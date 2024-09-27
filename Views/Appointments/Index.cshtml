@@ -1,15 +1,27 @@
 ﻿@model IEnumerable<AppointmentWebApp.Models.Appointment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Appointments";
 }
 
-<h1>Index</h1>
-
+<h2>Appointments</h2>
+<div class="search-container">
+    <form method="post" asp-action="Search">
+        <div class="input-group">
+            <input type="text" class="form-control" name="searchQuery" placeholder="Search..." />
+            <button class="btn btn-secondary ms-2" type="submit">Search</button>
+            <button class="btn btn-secondary ms-2" type="button" onclick="filterAppointments('Upcoming')">Upcoming</button>
+            <button class="btn btn-secondary ms-2" type="button" onclick="filterAppointments('Completed')">Completed</button>
+        </div>
+        
+    </form>
+</div>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+@if(User.IsInRole("Admin"))
+{
+   <table class="table">
     <thead>
         <tr>
             <th>
@@ -75,4 +87,164 @@
         </tr>
 }
     </tbody>
-</table>
+    </table>
+}
+else if(User.IsInRole("Patient"))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PatientId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Patient)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DoctorId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Doctor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AppointmentDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Symptoms)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsPaid)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Patient.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Patient.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Doctor.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Doctor.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppointmentDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Symptoms)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsPaid)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                        <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id">GoToTransaction</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PatientId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Patient)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DoctorId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Doctor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AppointmentDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Symptoms)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsPaid)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Patient.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Patient.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Doctor.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Doctor.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppointmentDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Symptoms)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsPaid)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                        <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id">GoToTransaction</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script>
+    function filterAppointments(status) {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '@Url.Action("Index")'; // Adjust the action if needed
+
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'status';
+        input.value = status;
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
