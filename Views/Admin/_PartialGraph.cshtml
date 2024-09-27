@@ -9,21 +9,21 @@ else
     <div style="width: 600px; height: 300px;">
         <canvas id="appointmentsChart"></canvas>
     </div>
+}
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         var ctx = document.getElementById('appointmentsChart').getContext('2d');
 
-        // Define an array of different shades of grey for styling
         var backgroundColors = [
-            'rgba(54, 162, 235, 0.6)', // Light Blue
-            'rgba(75, 192, 192, 0.6)', // Cyan
-            'rgba(153, 102, 255, 0.6)', // Purple Blue
-            'rgba(99, 130, 255, 0.6)',  // Soft Blue
-            'rgba(54, 162, 235, 0.6)',  // Deep Sky Blue
-            'rgba(75, 146, 219, 0.6)',  // Medium Blue
-            'rgba(30, 144, 255, 0.6)'   // Dodger Blue
-        ];
+            'rgba(54, 162, 235, 0.6)', 
+            'rgba(75, 192, 192, 0.6)', 
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(99, 130, 255, 0.6)',  
+            'rgba(54, 162, 235, 0.6)',  
+            'rgba(75, 146, 219, 0.6)',  
+            'rgba(30, 144, 255, 0.6)'   
+        ]; 
         var borderColors = backgroundColors.map(color => color.replace('0.6', '1')); // Use the same colors for borders with higher opacity
 
         var appointmentsChart = new Chart(ctx, {
@@ -43,7 +43,7 @@ else
                     x: {
                         ticks: {
                             autoSkip: false, // Ensure labels are not skipped
-                            maxRotation: 0,  // Force labels to display horizontally
+                            maxRotation: 0,  
                             minRotation: 0,  // Force labels to display horizontally
                         }
                     },
@@ -63,4 +63,4 @@ else
             }
         });
     </script>
-}
+
