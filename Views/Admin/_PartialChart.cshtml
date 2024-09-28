@@ -11,68 +11,70 @@ else
     </div>
 }
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        var ctx = document.getElementById('transactionsChart').getContext('2d');
+<script>
+    var ctx = document.getElementById('transactionsChart').getContext('2d');
 
-        var backgroundColors = [
-            'rgba(54, 162, 235, 0.6)', // Light Blue
-            'rgba(75, 192, 192, 0.6)', // Cyan
-            'rgba(153, 102, 255, 0.6)', // Purple Blue
-            'rgba(99, 130, 255, 0.6)',  // Soft Blue
-            'rgba(54, 162, 235, 0.6)',  // Deep Sky Blue
-            'rgba(75, 146, 219, 0.6)',  // Medium Blue
-            'rgba(30, 144, 255, 0.6)'   // Dodger Blue
-        ];
+    // Define a single shade of blue with varying opacities for subtle differentiation
+    var baseColor = 'rgba(54, 162, 235, 1)'; // Darker Blue
 
-        var borderColors = backgroundColors.map(color => color.replace('0.6', '1')); // Use same colors for borders with higher opacity
+    // Opacity values to create slight variations for different bars
+    var opacities = [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9];
 
-        var labels = @Html.Raw(Json.Serialize(Model.Select(ac => ac.Date.ToString("MM/dd")).ToList()));  // Dates
-        var transactionCounts = @Html.Raw(Json.Serialize(Model.Select(ac => ac.Count).ToList()));        // Transaction Counts
-        var totalEarnings = @Html.Raw(Json.Serialize(Model.Select(ac => ac.TotalEarnings).ToList()));    // Total Earnings
+    // Create background color array with different opacities based on the count of transactions
+    var backgroundColors = Array.from({ length: 7 }, (_, index) => `rgba(54, 162, 235, ${opacities[index]})`);
+    var borderColors = backgroundColors.map(color => color.replace('0.4', '1').replace('0.5', '1').replace('0.6', '1').replace('0.7', '1').replace('0.8', '1').replace('0.9', '1'));
 
-        var transactionsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Transactions',
-                    data: transactionCounts,
-                    borderColor: borderColors,
-                    backgroundColor: backgroundColors,
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: false, // Ensure labels are not skipped
-                            maxRotation: 0,  // Force labels to display horizontally
-                            minRotation: 0,  // Force labels to display horizontally
-                        }
-                    },
-                    y: {
-                        beginAtZero: true
+    // Data arrays from your model
+    var labels = @Html.Raw(Json.Serialize(Model.Select(ac => ac.Date.ToString("MM/dd")).ToList()));  // Dates
+    var transactionCounts = @Html.Raw(Json.Serialize(Model.Select(ac => ac.Count).ToList()));        // Transaction Counts
+    var totalEarnings = @Html.Raw(Json.Serialize(Model.Select(ac => ac.TotalEarnings).ToList()));    // Total Earnings
+
+    var transactionsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Transactions',
+                data: transactionCounts,
+                // Apply single base color with varying opacities for a consistent look
+                backgroundColor: backgroundColors.slice(0, transactionCounts.length),
+                borderColor: borderColors.slice(0, transactionCounts.length),
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false, // Ensure labels are not skipped
+                        maxRotation: 0,  // Force labels to display horizontally
+                        minRotation: 0,  // Force labels to display horizontally
                     }
                 },
-                plugins: {
-                    legend: {
-                        display: true, // Show the legend if needed
-                        position: 'top'
-                    },
-                    tooltip: {
-                        enabled: true,
-                        callbacks: {
-                            // Custom tooltip display to show Total Earnings
-                            label: function (tooltipItem) {
-                                var transactionCount = transactionCounts[tooltipItem.dataIndex];
-                                var earnings = totalEarnings[tooltipItem.dataIndex].toLocaleString('en-US', { style: 'currency', currency: 'BDT', currencyDisplay: 'symbol' });
-                                return `Transactions: ${transactionCount}, Earnings: ${earnings}`;
-                            }
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true, // Show the legend if needed
+                    position: 'top'
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        // Custom tooltip display to show Total Earnings
+                        label: function (tooltipItem) {
+                            var transactionCount = transactionCounts[tooltipItem.dataIndex];
+                            var earnings = totalEarnings[tooltipItem.dataIndex].toLocaleString('en-US', { style: 'currency', currency: 'BDT', currencyDisplay: 'symbol' });
+                            return `Transactions: ${transactionCount}, Earnings: ${earnings}`;
                         }
                     }
                 }
             }
-        });
-    </script>
+        }
+    });
+</script>
+
+
 

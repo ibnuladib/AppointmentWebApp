@@ -24,7 +24,10 @@
         </form>
     </div>
     <div style="height: 20px;"></div>
-    @if (Model == null || !Model.Any())
+
+    @if(User.IsInRole("Patient"))
+    {
+            @if (Model == null || !Model.Any())
     {
         <p>No reviews available at the moment.</p>
     }
@@ -40,7 +43,7 @@
                         @Html.DisplayNameFor(model => model.DoctorId)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.PatientId)
+                        Name
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.DateCreated)
@@ -51,7 +54,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Comment)
                     </th>
-                    <th>Actions</th> <!-- Add a header for the Actions column -->
+                    <th>Actions</th> 
                 </tr>
             </thead>
             <tbody>
@@ -65,7 +68,9 @@
                             @Html.DisplayFor(modelItem => item.DoctorId)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.PatientId)
+                            @Html.DisplayFor(modelItem => item.Doctor.FirstName)
+                             
+                            @Html.DisplayFor(modelItem => item.Doctor.LastName)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.DateCreated)
@@ -77,15 +82,176 @@
                             @Html.DisplayFor(modelItem => item.Comment)
                         </td>
                         <td>
+                                <a asp-controller="Users"
+                               asp-action="UserDetails"
+                           asp-route-id="@item.DoctorId"
+                           asp-route-rate="true"
+                               class="btn btn-warning ms-2">
+                           Update</a>
+                        </td>
+                        <td>
+
                             <form asp-action="DeleteConfirmed" asp-route-id="@item.ReviewId" method="post">
                                 <input type="submit" value="Delete" class="btn btn-danger" />
                             </form>
+
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     }
+
+    }
+    @if (User.IsInRole("Doctor"))
+    {
+        @if (Model == null || !Model.Any())
+        {
+            <p>No reviews available at the moment.</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ReviewId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PatientId)
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DateCreated)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Rating)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Comment)
+                        </th>
+                        <th>Actions</th> <!-- Add a header for the Actions column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PatientId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Patient.FirstName)
+
+                                @Html.DisplayFor(modelItem => item.Patient.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateCreated)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Rating)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Comment)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    }
+    @if (User.IsInRole("Admin"))
+    {
+        @if (Model == null || !Model.Any())
+        {
+            <p>No reviews available at the moment.</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ReviewId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DoctorId)
+                        </th>
+                        <th>
+                            Doctor Name
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PatientId)
+                        </th>
+                        <th>
+                            Patient Name
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DateCreated)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Rating)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Comment)
+                        </th>
+                        <th>Actions</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DoctorId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Doctor.FirstName)
+
+                                @Html.DisplayFor(modelItem => item.Doctor.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PatientId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Patient.FirstName)
+
+                                @Html.DisplayFor(modelItem => item.Patient.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateCreated)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Rating)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Comment)
+                            </td>
+                            <td>
+
+                                <form asp-action="DeleteConfirmed" asp-route-id="@item.ReviewId" method="post">
+                                    <input type="submit" value="Delete" class="btn btn-danger" />
+                                </form>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    }
 </body>
+
+
 
 
