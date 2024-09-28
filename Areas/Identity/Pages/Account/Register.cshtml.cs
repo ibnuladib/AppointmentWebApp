@@ -137,11 +137,22 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             public int VisitingTimeEndHour { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
+            // Check if the user is authenticated
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Landing", "Home"); // Redirect to Home if authenticated
+            }
+
             ReturnUrl = returnUrl;
+
+            // Fetch external authentication schemes
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            return Page(); // Return the page if not authenticated
         }
+
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {

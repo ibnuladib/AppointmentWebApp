@@ -5,11 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using AppointmentWebApp.Data;
 using AppointmentWebApp.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppointmentWebApp.Controllers
 {
+    
     public class AdminController : Controller
     {
+        
         private readonly ApplicationDbContext _context;
         private readonly ILogger<AdminController> _logger;
         public AdminController(ApplicationDbContext context, ILogger<AdminController> logger)
@@ -17,7 +20,7 @@ namespace AppointmentWebApp.Controllers
             _context = context;
             _logger = logger;
         }
-
+        [Authorize(Roles = "Admin")]
         // This action method returns the logs to a partial view
         public IActionResult _PartialLogs()
         {
