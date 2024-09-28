@@ -45,7 +45,6 @@ namespace AppointmentWebApp.Controllers
                     t.Appointment.PatientId == userId || t.Appointment.DoctorId == userId);
             }
 
-            // Search by Patient/Doctor FirstName + LastName, Patient/Doctor Id, TransactionId
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 transactionsQuery = transactionsQuery.Where(t =>

@@ -11,56 +11,54 @@ else
     </div>
 }
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        var ctx = document.getElementById('appointmentsChart').getContext('2d');
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('appointmentsChart').getContext('2d');
 
-        var backgroundColors = [
-            'rgba(54, 162, 235, 0.6)', 
-            'rgba(75, 192, 192, 0.6)', 
-            'rgba(153, 102, 255, 0.6)',
-            'rgba(99, 130, 255, 0.6)',  
-            'rgba(54, 162, 235, 0.6)',  
-            'rgba(75, 146, 219, 0.6)',  
-            'rgba(30, 144, 255, 0.6)'   
-        ]; 
-        var borderColors = backgroundColors.map(color => color.replace('0.6', '1')); // Use the same colors for borders with higher opacity
+    var baseGreyColor = 'rgba(128, 128, 128, 1)'; 
 
-        var appointmentsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: @Html.Raw(Json.Serialize(Model.Select(ac => ac.Date.ToString("MM/dd")).ToList())), // Corrected Date Format
-                datasets: [{
-                    label: 'Total Appointments',
-                    data: @Html.Raw(Json.Serialize(Model.Select(ac => ac.Count).ToList())),
-                    borderColor: borderColors,
-                    backgroundColor: backgroundColors,
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: false, // Ensure labels are not skipped
-                            maxRotation: 0,  
-                            minRotation: 0,  // Force labels to display horizontally
-                        }
-                    },
-                    y: {
-                        beginAtZero: true
+    var greyOpacities = [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9];
+
+    var backgroundColors = greyOpacities.map(opacity => `rgba(128, 128, 128, ${opacity})`);
+
+    // Use full opacity for the border color
+    var borderColors = backgroundColors.map(color => color.replace(/0\.\d+/g, '1'));
+
+    var appointmentsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.Select(ac => ac.Date.ToString("MM/dd")).ToList())), // Date Labels
+            datasets: [{
+                label: 'Total Appointments',
+                data: @Html.Raw(Json.Serialize(Model.Select(ac => ac.Count).ToList())),                 // Appointments Data
+                borderColor: borderColors,
+                backgroundColor: backgroundColors,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false,  // Ensure labels are not skipped
+                        maxRotation: 0,   // Force labels to display horizontally
+                        minRotation: 0,
                     }
                 },
-                plugins: {
-                    legend: {
-                        display: true, // Show the legend if needed
-                        position: 'top'
-                    },
-                    tooltip: {
-                        enabled: true
-                    }
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,      // Show the legend if needed
+                    position: 'top'
+                },
+                tooltip: {
+                    enabled: true       // Enable tooltips
                 }
             }
-        });
-    </script>
+        }
+    });
+</script>
 

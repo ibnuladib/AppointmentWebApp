@@ -80,7 +80,7 @@ namespace AppointmentWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> UserDetails(string id)
+        public async Task<IActionResult> UserDetails(string id, bool rate = false)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -93,6 +93,7 @@ namespace AppointmentWebApp.Controllers
                 return NotFound();
             }
 
+            ViewData["Rate"] = rate;
             return View(user);
         }
         // GET: Users/Delete/id

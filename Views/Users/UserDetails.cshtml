@@ -11,9 +11,9 @@
     var isViewingDoctor = await UserManager.IsInRoleAsync(Model, "Doctor");
     var isViewingPatient = await UserManager.IsInRoleAsync(Model, "Patient");
 }
-
 @if (loggedInUserRole == "Patient" && isViewingDoctor)
 {
+
     <div class="container mt-5">
         <div class="card">
             <div class="row no-gutters">

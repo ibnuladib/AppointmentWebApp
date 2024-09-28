@@ -3,9 +3,8 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    var doctorId = Model.Id; // Doctor's ID if you're viewing a doctor profile
-
-    var patientId = UserManager.GetUserId(User); // Logged-in user's ID
+    var doctorId = Model.Id; 
+    var patientId = UserManager.GetUserId(User); 
 }
 
 <body>
