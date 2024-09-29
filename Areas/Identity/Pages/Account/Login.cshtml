@@ -1,4 +1,4 @@
-﻿@page
+﻿@* @page
 
 @model LoginModel
 @using Microsoft.AspNetCore.Identity
@@ -6,10 +6,7 @@
 
 @{
     ViewData["Title"] = "Log in";
-    //if (User.Identity.IsAuthenticated)
-    //{
-      //  Response.Redirect("/Dashboard/Index");
-        //return;
+
     }
 }
 
@@ -91,3 +88,5 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+ *@
+
