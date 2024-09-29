@@ -1,11 +1,4 @@
-﻿@*
-    
-*@
-@{
-    ViewData["Title"] = "Dashboard";
-}
-
-@if (User.IsInRole("Admin"))
+﻿@if (User.IsInRole("Admin"))
 {
     <script>
         window.location.href = '@Url.Action("Index", "Admin")'; // Change as needed
