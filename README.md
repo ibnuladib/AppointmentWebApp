@@ -2,19 +2,33 @@
 
 Welcome to Baymax Care, a comprehensive doctor's appointment system designed to facilitate seamless interactions between patients and healthcare providers. Our application streamlines the appointment scheduling process, ensuring that patients have easy access to medical care while allowing doctors to manage their schedules effectively.
 
+## CaseStudy
+In our country, the healthcare system is quite inefficient as it wastes time as at times patients need to come to the clinic or hospital to book an appointment and wait for it, in other scenarios it also wastes resources too as clerks are needed to manage appointments, including making calls or receiving calls in queries to doctors or appointments. So, our goal was to make the process entirely online and make booking more efficient by reducing the time, effort and resources it takes to book an appointment. 
+
+In our system, Patients can sign up with all their necessary details and are authenticated using their email address. They can give their past medical records and details and update their profile. They can search for doctors and see their past reviews. Once they find the one they want to book an appointment with. They can then create an appointment at the available time slots. A transaction responding to the appointment will be created. The Patient can view the transaction and pay it. The doctor will receive a notification concerning the Appointment and can prepare for it via looking through the Patient’s medical history. 
+An Administrator will manage all records of Patients, Doctors and Reviews to moderate through it when deemed necessary. 
+All these actions will be done through a user-friendly interface. 
+
+##Technoloy Used
+- C#
+- ASP.NET CORE MVC
+- Libraries: Identity, Signal R
+- SQL
+- JavaScript
+- Bootstrap CSS, html
+ 
 ## Features
 
 ### 1. Patient Booking System
 - **User-Friendly Interface**: Patients can easily navigate the application to find and book appointments with their preferred doctors.
 - **Available Time Slots**: Patients can view the available time slots for each doctor, enabling them to select a time that fits their schedule.
 - **Appointment Confirmation**: Once a patient books an appointment, they receive a confirmation notification via email or in-app, ensuring clarity and peace of mind.
-- **Cancellation and Rescheduling**: Patients can cancel or reschedule their appointments easily, offering flexibility in managing their healthcare.
-- **Medical History Submission**: Patients can submit their medical history during the booking process, allowing doctors to review important information ahead of the appointment.
+- **Patient Dashboard**: Patients have a Dashboard to track their appointments and transactions status.
 
 ### 2. Doctor Dashboard
 - **Appointment Management**: Doctors can view all their scheduled appointments in a user-friendly dashboard, allowing them to prepare for their patient visits.
 - **Patient Details**: Doctors have access to essential patient information before appointments, including medical history and previous consultations, facilitating personalized care.
-- **Time Slot Management**: Doctors can set their available time slots, making it easy to manage their schedules and availability for patients.
+- **Time Slot Management**: Doctors can set their available time slots with shifts, making it easy to manage their schedules and availability for patients.
 - **Performance Tracking**: The dashboard includes statistics on patient visits, reviews, and overall performance, helping doctors assess their service quality and improve where necessary.
 - **Consultation Fees Management**: Doctors can set and update their consultation fees, allowing for better financial planning and transparency for patients.
 
@@ -24,36 +38,41 @@ Welcome to Baymax Care, a comprehensive doctor's appointment system designed to 
 - **Patient Role**: Patients can create accounts, book appointments, and leave reviews for their doctors. They can view their appointment history, manage their profile information, and view their consultation fees.
 
 ### 4. Review and Feedback System
-- **Patient Reviews**: After appointments, patients can leave reviews and ratings for their doctors, providing valuable feedback that can help improve service quality.
-- **Rating System**: The application includes a rating system from 1 to 5 stars, allowing patients to express their level of satisfaction clearly.
+- **Patient Reviews**: After appointments, patients can leave comments and ratings for their doctors, providing valuable feedback that can help improve service quality.
+- **Rating System**: A rating system from 1 to 5 stars is there to allow patients to express their level of satisfaction clearly which can be updated later.
 - **Visibility of Reviews**: Doctors can view their reviews, enabling them to respond to feedback and improve their services based on patient insights.
 - **Aggregate Ratings**: The system calculates an average rating for each doctor based on patient reviews, helping future patients make informed decisions.
 
 ### 5. Payment Integration
-- **Secure Transactions**: The system supports various payment methods, ensuring secure financial transactions for booked appointments.
+- **Different Payment Methods**: The system supports various payment methods, ensuring secure financial transactions for booked appointments.
 - **Transaction History**: Patients can view their transaction history, including details of payments made for consultations and any outstanding balances.
 - **Financial Reports for Doctors**: Doctors can access reports on their earnings, helping them understand their financial performance within the platform.
-- **Payment Status Tracking**: The system allows patients to track the payment status of their appointments (Paid, Unpaid, or Pending).
+- **Payment Status Tracking**: The system allows patients to track the payment status of their appointments (Paid or UnPaid).
 
-### 6. Notifications and Reminders
-- **Email Notifications**: Patients and doctors receive email notifications for appointment confirmations, cancellations, and reminders.
+### 6. Notifications and Log
 - **In-App Notifications**: Users can view notifications directly within the app for a seamless experience.
-
-### 7. Responsive Design
-- **Mobile Compatibility**: The application is designed to be responsive, ensuring that patients and doctors can access it from various devices, including smartphones and tablets.
-- **Intuitive User Experience**: The layout and navigation are optimized for ease of use, making it simple for all users to find the information they need quickly.
+- **Admin Log**: Admins will have a log page to check the most recent updates.
 
 ### 8. Analytics Dashboard
-- **Admin Analytics**: Admins can view analytics related to user registrations, appointment bookings, and overall system performance.
+- **Admin Analytics**: Admins can view analytics related to user payments, appointment bookings, and overall hospital/clinic performance.
 - **Doctor Analytics**: Doctors have access to personal analytics, including the number of patients seen, average ratings, and financial performance over time.
 
 ## MVC Architecture
 
-Model-View-Controller (MVC) is a software architectural pattern commonly used in web applications. It separates the application into three interconnected components:
+Model-View-Controller (MVC) is a software architectural pattern commonly used in web applications similar to Monolythic Architecture. It separates the application into three interconnected components:
+![image](https://github.com/user-attachments/assets/1a96750d-37d8-40dc-8540-b76ac5e1589b)  ![image](https://github.com/user-attachments/assets/c0776718-20d6-446f-aa76-304793662833)
+
 
 - **Model**: Represents the application's data and business logic. In Baymax Care, this includes models like `ApplicationUser`, `Appointment`, `Review`, and `Transaction`, which define how data is stored and interacted with.
 - **View**: Represents the user interface and displays the data from the model to the user. Views handle the presentation layer, allowing users to interact with the application.
 - **Controller**: Acts as an intermediary between the Model and View. It processes user inputs, manipulates the model, and updates the view accordingly. Controllers handle the application's logic and direct the flow of data.
+
+## Database Schemas
+![image](https://github.com/user-attachments/assets/c2cbfeb9-f802-4080-a733-5aa4e6d71f69)
+
+## Permissions Chart
+
+![image](https://github.com/user-attachments/assets/1be3bf29-2fe8-417f-9184-609f6882cb36)
 
 ## Configuration with `appsettings.json`
 
@@ -127,7 +146,9 @@ To get a copy of the project up and running on your local machine for developmen
     dotnet run
     ```
 
-6. Access the application at `http://localhost:5000`.
+6. Access the application at `http://localhost:[Port Number]`.
+
+7. An Admin page is made by default; email - admin@admin.com and password - Test1234,
 
 ## Usage
 
