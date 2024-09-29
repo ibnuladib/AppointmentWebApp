@@ -9,10 +9,15 @@
 @using AppointmentWebApp.Enums
 <style>
     /* General styles */
-body {
-    background-color:   ; /* Light grey background */
-    font-family: Arial, sans-serif;
-}
+    body {
+        background-image: url('/images/Background.jpg'); /* Change this to your image path or URL */
+        background-size: 300% 600%;
+        background-size: cover; /* Cover the entire screen */
+        background-position: center; /* Center the background image */
+        background-repeat: no-repeat; /* Prevent repeating */
+        height: 100vh; /* Full viewport height */
+        margin: 0; /* Remove default margin */
+    }
 
 /* Card styles */
 .card {
@@ -20,12 +25,26 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+    .nav-link {
+        color: darkblue ; /* Make the inactive tab title white */
+    }
+
+        .nav-link:hover {
+            color: darkblue; /* Keeps the same color as the default state */
+            background-color: transparent; /* Removes background highlight */
+            text-decoration: none; /* Disables underline or other hover effects */
+        }
+
+        .nav-link.active {
+            color: purple; /* Dark grey text for the active tab */
+            background-color: purple; /* Optional: Change the background for the active tab */
+        }
 /* Header styles */
-.card-header {
-    background-color: #007bff; /* Blue background */
-    color: white;
-    border-radius: 8px 8px 0 0;
-}
+    .card-header {
+        background-color: lightskyblue; /* Blue background */
+        color: black; /* Default white text */
+        border-radius: 8px 8px 0 0;
+    }
 
 .card-title {
     color: #333; /* Dark grey text */
