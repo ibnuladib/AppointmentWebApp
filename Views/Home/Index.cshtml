@@ -223,34 +223,41 @@ nav a:hover {
     <p>Dedicated to providing the best healthcare for you and your family.</p>
 </section>
 
-<section class="content">
-    <h3>Why Choose Us?</h3>
-    <p>
-        Our healthcare professionals are committed to delivering high-quality medical services. We offer a wide range of services from primary care to specialized treatments. We believe in personalized care, and our team works around the clock to ensure that your health is our top priority.
-    </p>
-</section>
+    <section class="content">
+        <h3>Why Choose Us?</h3>
+        <p>
+            <strong>Baymax Care</strong> offers a seamless and efficient healthcare experience for both patients and doctors. Our platform prioritizes ease of use, transparency, and communication, making it the go-to solution for managing healthcare appointments.
+        </p>
+        <p>
+            <strong>Key Benefits:</strong> Efficient appointment scheduling, intuitive doctor dashboards, a robust review system, secure payments, and comprehensive analytics all contribute to improving healthcare services for everyone.
+        </p>
+        <p>
+            <strong>Key Numbers:</strong> We manage over 5,000 appointments monthly, maintain an average doctor rating of 4.8/5, and offer 20+ specializations, ensuring patients receive the right care when they need it.
+        </p>
+    </section>
+
 
 <section class="features">
     <div class="features">
         <ul class="features">
             <li class="feature-box">
                 <img src="" alt="Icon2">
-                <a  href="https://www.google.com/maps" target="_blank" style="color: inherit; text-decoration: none;">
+                    <a class="nav-link text-dark" href="@Url.Action("Index", "Search")">
                     <h4 class="link_color_change">Expert Doctors</h4>
                 </a>
                 <p>Our team of doctors are experienced and ready to care for you with top-notch expertise.</p>
             </li>
             <li class="feature-box">
                 <img src="" alt="Icon1">
-                <a  href="https://www.google.com/maps" target="_blank" style="color: inherit; text-decoration: none;">
+                    <a class="link_color_change" href="@Url.Page("/Account/Register", new { area = "Identity", role = "Patient" })">
                     <h4 class="link_color_change">Make An appointment</h4>
                 </a>
                 <p>We provide state-of-the-art facilities to ensure the highest standard of medical care.</p>
             </li>
             <li class="feature-box">
                     <img src="" alt="Icon3">
-                <a  href="https://www.google.com/maps" target="_blank" style="color: inherit; text-decoration: none;">
-                    <h4 class="link_color_change">Locations</h4>
+                    <a class="link_color_change" href="@Url.Page("/Account/Register", new { area = "Identity", role = "Doctor" })">
+                    <h4 class="link_color_change">Join As Doctor</h4>
                 </a>
                 <p>Our emergency department is open 24/7 to handle all your urgent medical needs.</p>
             </li>
