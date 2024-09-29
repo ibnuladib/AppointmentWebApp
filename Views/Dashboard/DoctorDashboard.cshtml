@@ -140,7 +140,7 @@
             color: white;
         }
 
-        .badge {
+/*         .badge {
             padding: 5px 10px;
             border-radius: 5px;
             color: white;
@@ -152,7 +152,7 @@
 
         .badge-warning {
             background-color: #ffc107;
-        }
+        } */
 
         footer {
             background-color: #0079c2;
@@ -178,9 +178,9 @@
     <!-- Statistics Section -->
     <div class="dashboard-statistics">
         <div class="stat">
-            <i class="fas fa-dollar-sign"></i>
+                <i class="fas fa-coins"></i>
             <h3>Total Income</h3>
-            <p>@ViewBag.TotalIncome.ToString("C")</p>
+            <p>@ViewBag.TotalIncome.ToString()</p>
         </div>
 
         <div class="stat">
@@ -201,10 +201,11 @@
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>Patient</th>
+                <th>Patient</th>    
                 <th>Date</th>
                 <th>Billing Amount</th>
-                <th>Status</th>
+                <th>Symptoms</th>
+                <th>Has Paid</th>
             </tr>
         </thead>
         <tbody>
@@ -213,11 +214,12 @@
                 <tr>
                     <td>@appointment.Patient.FirstName @appointment.Patient.LastName</td>
                     <td>@appointment.AppointmentDate.ToString("g")</td>
-                    <td>@appointment.Amount.ToString("C")</td>
+                    <td>@appointment.Amount.ToString()</td>
                     <td>
-                        <span class="badge badge-@((appointment.Status == "Completed") ? "success" : "warning")">
-                            @appointment.Status
-                        </span>
+                            @appointment.Symptoms
+                    </td>
+                    <td>
+                        @appointment.IsPaid
                     </td>
                 </tr>
             }
