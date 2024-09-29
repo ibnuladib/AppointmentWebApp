@@ -5,15 +5,21 @@
 
 <a href="@Url.Action("Doctors", "Users")" class="btn btn-primary">Show Doctors</a>
 <a href="@Url.Action("Patients", "Users")" class="btn btn-primary">Show Patients</a>
-
+<style>
+    .table th {
+        background-color: white;
+        color: black;
+    }
+</style>
 <!-- Search bar -->
 <div class="search-container mb-3">
-    <form method="get" asp-action="Index">
-        <div class="input-group">
-            <input type="text" class="form-control" name="searchQuery" placeholder="Search by ID, Name, Email, Phone..." />
-            <button class="btn btn-secondary" type="submit">Search</button>
-        </div>
+
+    <form asp-action="Index" asp-controller="Users" method="get" class="d-flex">
+        <input type="text" class="form-control me-2" name="searchTerm" placeholder="Search by ID, Name, Email, Phone..." />
+        <button class="btn btn-secondary" type="submit">Search</button>
     </form>
+
+
 </div>
 
 <table class="table">

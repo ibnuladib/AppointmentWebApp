@@ -29,6 +29,7 @@ namespace AppointmentWebApp.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the current user's ID
             IQueryable<Transaction> transactionsQuery = _context.Transactions
+                .OrderByDescending(t => t.TransactionDate)
                 .Include(t => t.Appointment)
                     .ThenInclude(a => a.Patient) // Include Patient details
                 .Include(t => t.Appointment)

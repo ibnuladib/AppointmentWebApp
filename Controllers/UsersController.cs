@@ -23,9 +23,21 @@ namespace AppointmentWebApp.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm = null)
         {
-            var users = _userManager.Users.ToList();
+            var usersQuery = _userManager.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                usersQuery = usersQuery.Where(u => u.FirstName.Contains(searchTerm) ||
+                                                    u.LastName.Contains(searchTerm) ||
+                                                    u.Email.Contains(searchTerm) ||
+                                                    u.PhoneNumber.Contains(searchTerm) ||
+                                                    (u.FirstName + " " + u.LastName).Contains(searchTerm) ||
+                                                    u.Id.Contains(searchTerm));
+            }
+
+            var users = await usersQuery.ToListAsync();
             var userRoles = new Dictionary<ApplicationUser, IList<string>>();
 
             foreach (var user in users)
@@ -37,6 +49,7 @@ namespace AppointmentWebApp.Controllers
             ViewBag.UserRoles = userRoles;
             return View(users);
         }
+
 
         // Action to display users with the "Doctor" role
         public async Task<IActionResult> Doctors()

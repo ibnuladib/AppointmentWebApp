@@ -171,9 +171,11 @@
                 </div>
 
                 <div>
-
-                    <button class="submit-btn" type="submit" onclick="submitPayment(event)">Submit Payment</button>
-                    <button class="close-btn" onclick="closePopup()">Exit</button>
+                    @if (User.IsInRole("Patient"))
+                    {
+                        <button class="submit-btn" type="submit" onclick="submitPayment(event)">Submit Payment</button>
+                        <button class="close-btn" onclick="closePopup()">Exit</button>
+                    }
                 </div>
             </form>
         </div>
