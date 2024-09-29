@@ -81,7 +81,7 @@ namespace AppointmentWebApp.Controllers
                 return View("PatientDashboard");
             }
 
-            return View("AccessDenied");
+            return RedirectToAction("Index", "Admin");
         }
     }
 }
