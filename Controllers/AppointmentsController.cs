@@ -1,4 +1,5 @@
 ﻿using AppointmentWebApp.Data;
+using AppointmentWebApp.Enums;
 using AppointmentWebApp.Hubs;
 using AppointmentWebApp.Models;
 using AppointmentWebApp.Services;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace AppointmentWebApp.Controllers
@@ -20,14 +22,18 @@ namespace AppointmentWebApp.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHubContext<NotificationHub> _notificationHubContext;
         private readonly InMemoryAuditLog _inMemoryAuditLog;
+        private readonly AppointmentSlotService _appointmentSlotService;
+        private readonly ILogger<AppointmentsController> _logger;
 
-        public AppointmentsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, AppointmentService appointmentService, IHubContext<NotificationHub> notificationHubContext, InMemoryAuditLog inMemoryAuditLog ) /*IHubContext<NotificationHub> notificationHubContext*/
+        public AppointmentsController(ApplicationDbContext context,ILogger<AppointmentsController> logger,AppointmentSlotService appointmentSlotService, UserManager<ApplicationUser> userManager, AppointmentService appointmentService, IHubContext<NotificationHub> notificationHubContext, InMemoryAuditLog inMemoryAuditLog ) /*IHubContext<NotificationHub> notificationHubContext*/
         {
             _appointmentService = appointmentService;
             _context = context;
             _userManager = userManager;
             _notificationHubContext = notificationHubContext;
             _inMemoryAuditLog = inMemoryAuditLog;
+            _appointmentSlotService = appointmentSlotService;
+            _logger = logger;
         }
 
         private bool AppointmentExists(int id)
@@ -35,8 +41,6 @@ namespace AppointmentWebApp.Controllers
             return _context.Appointments.Any(e => e.Id == id);
         }
 
-
-        // GET: Appointments
         // GET: Appointments
         public async Task<IActionResult> Index(string searchQuery, string status)
         {
@@ -56,13 +60,11 @@ namespace AppointmentWebApp.Controllers
                 appointmentsQuery = appointmentsQuery.Where(a => a.DoctorId == userId);
             }
 
-            // Filter by status if provided
             if (!string.IsNullOrEmpty(status))
             {
                 appointmentsQuery = appointmentsQuery.Where(a => a.Status == status);
             }
 
-            // Perform the search if a search query is provided
             if (!string.IsNullOrWhiteSpace(searchQuery))
             {
                 appointmentsQuery = appointmentsQuery.Where(a =>
@@ -76,7 +78,7 @@ namespace AppointmentWebApp.Controllers
             }
 
             var appointments = await appointmentsQuery
-                .OrderByDescending(a => a.AppointmentDate)
+                .OrderByDescending(a => a.AppointmentCreated)
                 .ToListAsync();
 
             return View(appointments);
@@ -90,7 +92,6 @@ namespace AppointmentWebApp.Controllers
             var appointment = await _context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
-                //  .Include(a => a.Transaction)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (appointment == null)
@@ -104,10 +105,10 @@ namespace AppointmentWebApp.Controllers
         [Authorize(Roles = "Admin, Patient")]
 
         // GET: Appointments/Create
-        public IActionResult Create()
+/*        public IActionResult Create()
         {
             return View();
-        }
+        }*/
 
         // POST: Appointments/Create
         [HttpPost]
@@ -118,7 +119,13 @@ namespace AppointmentWebApp.Controllers
             {
                 try
                 {
-                    // Use the AppointmentService to create the appointment and transaction
+                    _logger.LogInformation("Creating appointment with the following details:");
+                    _logger.LogInformation("PatientId: {PatientId}", appointment.PatientId);
+                    _logger.LogInformation("DoctorId: {DoctorId}", appointment.DoctorId);
+                    _logger.LogInformation("Amount: {Amount}", appointment.Amount);
+                    _logger.LogInformation("DateOfAppointment: {DateOfAppointment}", appointment.DateOfAppointment);
+                    _logger.LogInformation("AppointmentDate: {AppointmentDate}", appointment.AppointmentDate);
+                    _logger.LogInformation("StartTime: {StartTime}", appointment.StartTime);
                     var createdAppointment = await _appointmentService.CreateAppointmentAsync(appointment);
 
                     var doctorId = appointment.DoctorId;
@@ -197,6 +204,7 @@ namespace AppointmentWebApp.Controllers
                 Amount = (decimal)amount,
                 Doctor = doctor,
                 Patient = patient
+                
 
             };
 
@@ -289,5 +297,48 @@ namespace AppointmentWebApp.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAvailableTimes(DateOnly appointmentDate, string doctorId)
+        {
+            // Get available time slots based on the specified date and doctor's ID
+            var availableTimes = await _appointmentSlotService.GetAvailableTimeSlots(appointmentDate, doctorId);
+
+            // Return the list of available time strings as JSON
+            return Json(availableTimes);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateNew([FromBody] Appointment appointment)
+        {
+            if (ModelState.IsValid)
+            {
+                // Save appointment to the database
+                var createdAppointment = await _appointmentService.CreateAppointmentAsync(appointment);
+                var doctorId = appointment.DoctorId;
+                var patientId = appointment.PatientId;
+                var doctor = await _userManager.FindByIdAsync(doctorId);
+                var patient = await _userManager.FindByIdAsync(patientId);
+                if (doctor != null && patient != null)
+                {
+                    string message = $"You have a new appointment with {patient.UserName} on {appointment.AppointmentDate}.\n Check Appointments for details";
+                    await _notificationHubContext.Clients.User(doctorId).SendAsync("ReceiveNotification", message);
+                    string message1 = "You have a new Transaction.";
+                    await _notificationHubContext.Clients.User(patientId).SendAsync("ReceiveNotification", message1);
+                }
+                await _inMemoryAuditLog.Log($" ID: {patientId}, Email: {patient.Email} booked an appointment with ID: {doctorId}, Email: {doctor.Email}");
+                await _inMemoryAuditLog.Log($"New Transaction has been created for ID: {patientId}, Email: {patient.Email}");
+
+                return Json(new { success = true });
+            }
+            return Json(new { success = false, message = "Invalid data" });
+        }
+
+
+
     }
+
+
+
+
 }
+
