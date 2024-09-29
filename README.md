@@ -64,18 +64,17 @@ The `appsettings.json` file is a configuration file used in ASP.NET Core applica
 - **Connection Strings**: This section contains the connection string to your database. You will need to update this string to match your database configuration:
     ```json
     "ConnectionStrings": {
-        "DefaultConnection": "Server=your_server;Database=your_database;User Id=your_username;Password=your_password;"
-    }
+    "ApplicationDbContextConnection": "Server=(localdb)\\mssqllocaldb;Database=AppointmentWebAppDemo;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True"
+  }
     ```
 - **Logging**: This section defines how logging is handled within your application. You can adjust the log levels for different categories to control the verbosity of logging output:
     ```json
     "Logging": {
-        "LogLevel": {
-            "Default": "Information",
-            "Microsoft": "Warning",
-            "Microsoft.Hosting.Lifetime": "Information"
-        }
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
     }
+  }
     ```
 - **Application Settings**: You can add custom settings for your application, such as feature flags or external service configurations.
 
@@ -91,19 +90,39 @@ To get a copy of the project up and running on your local machine for developmen
 
 1. Clone the repository:
     ```bash
-    git clone [https://github.com/yourusername/baymax-care.git](https://github.com/ibnuladib/AppointmentWebApp.git)
-    cd baymax-care
+    git clone https://github.com/ibnuladib/AppointmentWebApp.git
+    cd AppointmentWebApp
     ```
 2. Restore the dependencies:
     ```bash
     dotnet restore
     ```
 3. Update the connection string in the `appsettings.json` file to match your database configuration.
-4. Run the application:
+4. Apply the database migrations:
+
+    **Using .NET CLI:**
+    ```bash
+    dotnet ef migrations add InitialCreate
+    dotnet ef database update
+    ```
+
+    **Using Visual Studio:**
+    1. Open the **Package Manager Console** from **Tools > NuGet Package Manager > Package Manager Console**.
+    2. Run the following command to add a migration:
+        ```powershell
+        Add-Migration InitialCreate
+        ```
+    3. Run the following command to update the database:
+        ```powershell
+        Update-Database
+        ```
+
+5. Run the application:
     ```bash
     dotnet run
     ```
-5. Access the application at `http://localhost:5000`.
+
+6. Access the application at `http://localhost:5000`.
 
 ## Usage
 
@@ -113,10 +132,6 @@ To get a copy of the project up and running on your local machine for developmen
 ## Contributing
 
 Contributions are welcome! If you have suggestions for improvements or new features, please fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Acknowledgements
 
