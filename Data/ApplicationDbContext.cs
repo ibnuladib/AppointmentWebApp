@@ -20,14 +20,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
 
 
-protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Appointment>()
-                .HasOne<Transaction>() 
+                .HasOne<Transaction>()
                 .WithOne(t => t.Appointment)
-                .HasForeignKey<Transaction>(t => t.AppointmentId) 
+                .HasForeignKey<Transaction>(t => t.AppointmentId)
                 .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Appointment>()
@@ -51,13 +51,13 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
             .HasOne(r => r.Patient)
             .WithMany()  // Each patient can leave multiple reviews (but one per doctor)
             .HasForeignKey(r => r.PatientId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Doctor)
             .WithMany()  // Each doctor can have many reviews
             .HasForeignKey(r => r.DoctorId)
-            .OnDelete(DeleteBehavior.Restrict);
-
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }
+
