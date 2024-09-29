@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* General body styles for better presentation */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+
+        /* Blueish Header */
+        header {
+            background: linear-gradient(90deg, #0079c2 0%, #004e8c 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1000;
+        }
+
+        /* Styling for the header text */
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* Subtitle or tagline for the header */
+        header p {
+            font-size: 18px;
+            font-weight: 300;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation bar inside the header */
+        nav {
+            background-color: #005a92;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation links */
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        /* Hover effect for navigation links */
+        nav a:hover {
+            color: #9ed2f2;
+            text-shadow: 0 0 10px rgba(158, 210, 242, 0.7);
+        }
+
+        /* Responsive styling for smaller screens */
+        @@media (max-width: 768px) {
+            header h1 {
+                font-size: 28px;
+            }
+
+            nav a {
+                margin: 0 10px;
+            }
+        }
+
+        .dashboard {
+            padding: 60px 20px;
+            text-align: center;
+            background-color: #fff;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            letter-spacing: 1.5px;
+            color: #0079c2;
+        }
+
+        .patient-details, .last-appointment, .appointments-list {
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .patient-details h3, .last-appointment h3, .appointments-list h3 {
+            color: #0079c2;
+            margin-bottom: 15px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #0079c2;
+            color: white;
+        }
+
+        footer {
+            background-color: #0079c2;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to Healthcare Services</h1>
+</header>
+
+<nav>
+    <a class="link_color_change" href="@Url.Page("/Account/Login", new { area = "Identity" })">Log in</a>
+    <a class="link_color_change" href="@Url.Page("/Account/Register", new { area = "Identity" })">Register</a>
+    <a class="link_color_change" href="#contact">Contact</a>
+</nav>
+
+<div class="dashboard">
+    <h2>Patient Dashboard</h2>
+
+    <!-- Patient Details -->
+    <div class="patient-details">
+        <h3>Patient Details</h3>
+        <p><strong>Name:</strong> @ViewBag.Patient.FirstName @ViewBag.Patient.LastName</p>
+        <p><strong>Blood Group:</strong> @ViewBag.Patient.BloodGroup</p>
+        <p><strong>Medical History:</strong> @ViewBag.Patient.MedicalHistory</p>
+    </div>
+
+    <!-- Last Appointment Details -->
+    <div class="last-appointment">
+        <h3>Last Appointment</h3>
+        @if (ViewBag.LastAppointment != null)
+        {
+            <p><strong>Date:</strong> @ViewBag.LastAppointment.AppointmentDate.ToString("dd/MM/yyyy")</p>
+            <p><strong>Doctor:</strong> @ViewBag.LastAppointment.Doctor.FirstName @ViewBag.LastAppointment.Doctor.LastName</p>
+            <p><strong>Symptoms:</strong> @ViewBag.LastAppointment.Symptoms</p>
+        }
+        else
+        {
+            <p>No previous appointments found.</p>
+        }
+    </div>
+
+    <!-- List of All Appointments -->
+    <div class="appointments-list">
+        <h3>Appointments</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Doctor</th>
+                    <th>Symptoms</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appointment in ViewBag.AllAppointments)
+                {
+                    <tr>
+                        <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
+                        <td>@appointment.Doctor.FirstName @appointment.Doctor.LastName</td>
+                        <td>@appointment.Symptoms</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Healthcare Services. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
