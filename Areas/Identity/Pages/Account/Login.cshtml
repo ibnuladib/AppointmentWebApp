@@ -90,3 +90,168 @@
 }
  *@
 
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <!-- Link to Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+
+    <!-- Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- Link to Site CSS -->
+    <style>
+        html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow: hidden;
+}
+
+.form-background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('/Content/Background.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.form-box {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    width: 350px;
+    text-align: center;
+}
+
+h2 {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+.icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #666;
+    z-index: 1;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.remember-me label {
+    color: white;
+}
+
+.forgot-password {
+    color: white;
+    text-decoration: none;
+}
+
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+
+.btn {
+    background-color: white;
+    color: #6a5acd;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+    .btn:hover {
+        background-color: #f0f0f0;
+    }
+
+p {
+    color: white;
+}
+
+    p a {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+        p a:hover {
+            color: #ddd;
+        }
+
+
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="form-background">
+        <div class="form-box">
+            <h2>Login</h2>
+            <form action="/Account/Login" method="post">
+                <div class="form-group">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required />
+                    <i class="icon fa fa-user"></i>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required />
+                    <i class="icon fa fa-lock"></i>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember" />
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <p>Don't have an account? <a href="/Account/SignUp">Register</a></p>
+        </div>
+    </div>
+</body>
+</html>
+
+
