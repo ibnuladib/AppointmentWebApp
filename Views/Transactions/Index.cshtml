@@ -41,7 +41,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
-            <th></th>
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -63,13 +65,15 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-            @if (User.IsInRole("Admin"))
+                    @if (User.IsInRole("Admin"))
                     {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary mt-2">Edit</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning mt-2">Edit</a>  <!-- Yellow Button -->                   
+
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger mt-2">Delete</a>  <!-- Red Button -->
                     }
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a asp-action="Details" asp-controller="Appointments"  asp-route-id="@item.AppointmentId">GotoAppointment</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success mt-2">View</a>  <!-- Green Button -->
+                    <a asp-action="Details" asp-controller="Appointments" asp-route-id="@item.AppointmentId" class="btn btn-primary mt-2">GotoAppointment</a>  <!-- Blue Button -->
+
             </td>
         </tr>
 }
