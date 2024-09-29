@@ -6,21 +6,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Baymax Care</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> 
     <link rel="stylesheet" href="~/AppointmentWebApp.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        body {
-            background-color: #fdfefe; /* white background */
-            color: black; /* White text for visibility */
+
+/*         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        } */
+
+        /* Blueish Header */
+        header {
+            background: linear-gradient(90deg, #0079c2 0%, #004e8c 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1000;
         }
-        .navbar {
-            background-color: #77b4f6; /* Blue navbar */
+
+            /* Styling for the header text */
+            header h1 {
+                margin: 0;
+                font-size: 36px;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                font-weight: 700;
+            }
+
+        /* Navigation bar inside the header */
+        nav {
+            background-color: #005a92;
+            padding: 15px;
+            text-align: center;
+            position: sticky; /* Use sticky to keep the nav visible on scroll */
+            top: 0; /* Ensures it sticks to the top */
+            z-index: 999;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
-        .nav-link {
-            color: #ffffff; /* White text for links */
-            font-weight: bold; /* Make text pop */
+
+            /* Navigation links */
+            nav a {
+                color: white;
+                text-decoration: none;
+                margin: 0 20px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: color 0.3s ease;
+                font-size: 16px; /* Match font size */
+            }
+/*         .navbar {
+            background-color: #77b4f6; 
         }
+
+        */
+/*         .nav-link {
+            color: #ffffff; 
+            font-weight: bold; 
+        }  */
         .nav-link:hover {
             color: #d1ecf1; /* Lighter shade on hover */
             text-decoration: underline; /* Underline effect */
@@ -46,8 +95,28 @@
             background-color: #ffffff; /* White dropdown background */
             color: #000000; /* Black text for dropdown items */
         }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+/*             .table th, .table td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            } */
+
+            .table th {
+
+                background-color: #0079c2;
+                color: white;
+            }
     </style>
 </head>
+  
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -120,13 +189,23 @@
                                 </ul>
 
                                 <partial name="_LoginPartial" />
-                            </div>
+                    </div>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Baymax Care</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
                 }
             </div>
         </nav>
     </header>
+    
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 mt-5">
+            
             @RenderBody()
         </main>
     </div>
