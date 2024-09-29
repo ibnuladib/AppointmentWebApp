@@ -59,11 +59,16 @@ namespace AppointmentWebApp.Controllers
             else if (roles.Contains("Patient"))
             {
                 var allAppointments = await _context.Appointments
-                    .Where(a => a.PatientId == user.Id)
+                    .Where(a => a.PatientId == user.Id && a.Status == "Completed")
                     .Include(a => a.Doctor)
                     .ToListAsync();
 
+                var totalIncome = await _context.Transactions
+        .Where(t => t.Appointment.PatientId == user.Id && t.Appointment.IsPaid == true)
+        .SumAsync(t => t.Amount);
+
                 var lastAppointment = allAppointments
+                    .Where(a=> a.PatientId == user.Id && a.Status == "Completed" )
                     .OrderByDescending(a => a.AppointmentDate)
                     .FirstOrDefault();
 
