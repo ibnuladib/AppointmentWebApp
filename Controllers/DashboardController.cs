@@ -59,8 +59,10 @@ namespace AppointmentWebApp.Controllers
             else if (roles.Contains("Patient"))
             {
                 var allAppointments = await _context.Appointments
-                    .Where(a => a.PatientId == user.Id && a.Status == "Completed")
+                    .Where(a => a.PatientId == user.Id && a.Status == "UpComing")
                     .Include(a => a.Doctor)
+                                        .OrderBy(a => a.AppointmentDate)
+
                     .ToListAsync();
 
                 var totalIncome = await _context.Transactions
@@ -79,7 +81,7 @@ namespace AppointmentWebApp.Controllers
                 return View("PatientDashboard");
             }
 
-            return View("AccessDenied");
+            return RedirectToAction("Index", "Admin");
         }
     }
 }
