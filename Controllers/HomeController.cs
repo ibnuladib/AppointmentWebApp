@@ -22,6 +22,15 @@ namespace AppointmentWebApp.Controllers
             return View();
         }
 
+        public IActionResult Landing()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

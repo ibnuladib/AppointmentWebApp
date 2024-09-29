@@ -1,0 +1,227 @@
+﻿<!--@{
+    ViewData["Title"] = "Baymax Care Doctor Dashboard";
+    Layout = null;
+}
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* General body styles for better presentation */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+
+        /* Blueish Header */
+        header {
+            background: linear-gradient(90deg, #0079c2 0%, #004e8c 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1000;
+        }
+
+        /* Styling for the header text */
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* Subtitle or tagline for the header */
+        header p {
+            font-size: 18px;
+            font-weight: 300;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation bar inside the header */
+        nav {
+            background-color: #005a92;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation links */
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        /* Hover effect for navigation links */
+        nav a:hover {
+            color: #9ed2f2;
+            text-shadow: 0 0 10px rgba(158, 210, 242, 0.7);
+        }
+
+        /* Responsive styling for smaller screens */
+        @@media (max-width: 768px) {
+            header h1 {
+                font-size: 28px;
+            }
+
+            nav a {
+                margin: 0 10px;
+            }
+        }
+
+        .dashboard {
+            padding: 60px 20px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .dashboard h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            letter-spacing: 1.5px;
+        }
+
+        .dashboard-statistics {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 40px 20px;
+            background-color: #f4f4f4;
+        }
+
+        .stat {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 28%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #0079c2;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #0079c2;
+            color: white;
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+        }
+
+        footer {
+            background-color: #0079c2;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <h2>Welcome, Dr. @ViewBag.Doctor.FirstName @ViewBag.Doctor.LastName</h2>
+
+    <!-- Statistics Section -->
+    <div class="dashboard-statistics">
+        <div class="stat">
+            <i class="fas fa-dollar-sign"></i>
+            <h3>Total Income</h3>
+            <p>@ViewBag.TotalIncome.ToString("C")</p>
+        </div>
+
+        <div class="stat">
+            <i class="fas fa-users"></i>
+            <h3>Total Patients Visited</h3>
+            <p>@ViewBag.TotalPatientsVisited</p>
+        </div>
+
+        <div class="stat">
+            <i class="fas fa-star"></i>
+            <h3>Average Rating</h3>
+            <p>@ViewBag.AverageRating.ToString("N1") / 5</p>
+        </div>
+    </div>
+
+    <!-- Latest Appointments Section -->
+    <h3>Latest Appointments</h3>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Date</th>
+                <th>Billing Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var appointment in ViewBag.LatestAppointments)
+            {
+                <tr>
+                    <td>@appointment.Patient.FirstName @appointment.Patient.LastName</td>
+                    <td>@appointment.AppointmentDate.ToString("g")</td>
+                    <td>@appointment.Amount.ToString("C")</td>
+                    <td>
+                        <span class="badge badge-@((appointment.Status == "Completed") ? "success" : "warning")">
+                            @appointment.Status
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    <p>&copy; 2024 Healthcare Services. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
