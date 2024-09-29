@@ -27,11 +27,13 @@ namespace AppointmentWebApp.Controllers
             if (roles.Contains("Doctor"))
             {
                 var totalIncome = await _context.Transactions
-                    .Where(t => t.Appointment.DoctorId == user.Id)
+                    .Where(t => t.Appointment.DoctorId == user.Id && t.Appointment.IsPaid == true)
                     .SumAsync(t => t.Amount);
 
+                var today = DateTime.Today;
+
                 var totalPatientsVisited = await _context.Appointments
-                    .Where(a => a.DoctorId == user.Id)
+                    .Where(a => a.DoctorId == user.Id && a.Status == "Completed" && a.AppointmentDate.Date == today)
                     .CountAsync();
 
                 var averageRating = await _context.Reviews
@@ -39,7 +41,7 @@ namespace AppointmentWebApp.Controllers
                     .AverageAsync(r => (double?)r.Rating) ?? 0;
 
                 var latestAppointments = await _context.Appointments
-                    .Where(a => a.DoctorId == user.Id)
+                    .Where(a => a.DoctorId == user.Id && a.Status == "UpComing")
                     .Include(a => a.Patient)
                     .OrderByDescending(a => a.AppointmentDate)
                     .Take(5)
@@ -50,6 +52,7 @@ namespace AppointmentWebApp.Controllers
                 ViewBag.TotalPatientsVisited = totalPatientsVisited;
                 ViewBag.AverageRating = averageRating;
                 ViewBag.LatestAppointments = latestAppointments;
+                
 
                 return View("DoctorDashboard");
             }
