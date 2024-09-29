@@ -214,7 +214,7 @@ nav a:hover {
 
 <nav>
      <a class="link_color_change" href="@Url.Page("/Account/Login", new { area = "Identity" })">Log in</a>
-        <a class="link_color_change" href="@Url.Page("/Account/Register?role=Patient", new { area = "Identity" })">Register</a>
+        <a class="link_color_change" href="@Url.Page("/Account/Register", new { area = "Identity", role = "Patient" })">Register</a>
     <a class="link_color_change" href="#contact">Contact</a>
 </nav>
 
