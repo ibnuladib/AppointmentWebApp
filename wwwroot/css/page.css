@@ -1,6 +1,204 @@
-﻿namespace AppointmentWebApp.wwwroot.css
-{
-    public class page
-    {
+﻿<style >
+/* General body styles for better presentation */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f4f8;
+    color: #333;
+}
+
+/* Blueish Header */
+header {
+    background: linear-gradient(90deg, #0079c2 0%, #004e8c 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1000;
+}
+
+    /* Styling for the header text */
+    header h1 {
+        margin: 0;
+        font-size: 36px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    /* Subtitle or tagline for the header */
+    header p {
+        font-size: 18px;
+        font-weight: 300;
+        margin-top: 10px;
+        letter-spacing: 1px;
+    }
+
+/* Navigation bar inside the header */
+nav {
+    background-color: #005a92;
+    padding: 15px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+    /* Navigation links */
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: color 0.3s ease;
+    }
+
+        /* Hover effect for navigation links */
+        nav a:hover {
+            color: #9ed2f2;
+            text-shadow: 0 0 10px rgba(158, 210, 242, 0.7);
+        }
+
+/* Responsive styling for smaller screens */
+@@media (max-width: 768px) {
+    header h1 {
+        font-size: 28px;
+    }
+
+    nav a {
+        margin: 0 10px;
     }
 }
+
+
+.hero {
+    background-image: url('https://via.placeholder.com/1600x500');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 120px 20px;
+    text-align: center;
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.3);
+}
+
+    .hero h2 {
+        font-size: 48px;
+        margin: 0;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero p {
+        font-size: 24px;
+        margin-top: 20px;
+        font-weight: 300;
+    }
+
+.content {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #fff;
+}
+
+    .content h3 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        letter-spacing: 1.5px;
+    }
+
+    .content p {
+        font-size: 18px;
+        margin-bottom: 30px;
+        line-height: 1.8;
+        max-width: 800px;
+        margin: auto;
+        color: #555;
+    }
+
+.features {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 40px 20px;
+    background-color: #f4f4f4;
+}
+
+.feature-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 28%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+    .feature-box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-box img {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+
+    .feature-box h4 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #0079c2;
+    }
+
+    .feature-box p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+    }
+
+footer {
+    background-color: #0079c2;
+    color: white;
+    padding: 30px;
+    text-align: center;
+    margin-top: 40px;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+    footer p {
+        margin: 0;
+    }
+
+@@media (max-width: 768px) {
+    .features {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature-box {
+        width: 90%;
+    }
+
+    .hero h2 {
+        font-size: 36px;
+    }
+
+    .hero p {
+        font-size: 20px;
+    }
+
+    nav a {
+        margin: 0 10px;
+    }
+}
+
+</style >
