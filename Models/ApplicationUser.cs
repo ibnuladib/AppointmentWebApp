@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AppointmentWebApp.Enums;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -40,7 +41,7 @@ namespace AppointmentWebApp.Models
         public int? YearsOfExperience { get; set; } // Nullable
         public int? TotalAppointments { get; set; } // Nullable
         public List<Review>? Reviews { get; set; }
-
+        public DoctorShift Shift { get; set; }
         // Patient-specific attributes
         public string? BloodGroup { get; set; } // Nullable
         public string? MedicalHistory { get; set; } // Nullable

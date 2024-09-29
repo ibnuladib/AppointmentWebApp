@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using AppointmentWebApp.Enums;
 using AppointmentWebApp.Models;
 using AppointmentWebApp.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -127,30 +128,24 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             [Display(Name = "Address")]
            // [Required(ErrorMessage = "Address is required")]
             public string Address { get; set; }
-
-            [Display(Name = "Visiting Time Start Hour")]
-          //  [Required(ErrorMessage = "Start Hour is required.")]
-            public int VisitingTimeStartHour { get; set; }
-
-            [Display(Name = "Visiting Time End Hour")]
-           // [Required(ErrorMessage = "End Hour is required.")]
             public int VisitingTimeEndHour { get; set; }
+
+            [Display(Name = "Doctor Shift")]
+            public DoctorShift Shift { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
-            // Check if the user is authenticated
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Landing", "Home"); // Redirect to Home if authenticated
+                return RedirectToAction("Landing", "Home");
             }
 
             ReturnUrl = returnUrl;
 
-            // Fetch external authentication schemes
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            return Page(); // Return the page if not authenticated
+            return Page(); 
         }
 
 
@@ -182,8 +177,7 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
                     user.YearsOfExperience = Input.YearsOfExperience;
                     user.ConsultationFeesPerHour = Input.ConsultationFeesPerHour;
                     user.MedicalLicenseNumber = Input.MedicalLicenseNumber;
-                    //user.VisitingTimeStart = new DateTime(1, 1, 1, Input.VisitingTimeStartHour, 0, 0); // Hour only
-                    //user.VisitingTimeEnd = new DateTime(1, 1, 1, Input.VisitingTimeEndHour, 0, 0); // Hour only
+                    user.Shift = Input.Shift;
                 }
                 else if (role == "Patient")
                 {
@@ -247,9 +241,12 @@ namespace AppointmentWebApp.Areas.Identity.Pages.Account
             else
             {
                 _logger.LogInformation("Model Invalid");
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    _logger.LogError(error.ErrorMessage);
+                }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 
