@@ -52,6 +52,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Amount)
             </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
             <th>
                 Actions
             </th>
@@ -81,6 +84,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.IsPaid)
             </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)
             </td>

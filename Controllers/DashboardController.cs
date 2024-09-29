@@ -12,11 +12,12 @@ namespace AppointmentWebApp.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
-
-        public DashboardController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        private readonly ILogger<DashboardController> _logger;
+        public DashboardController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, ILogger<DashboardController> logger)
         {
             _userManager = userManager;
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -43,7 +44,7 @@ namespace AppointmentWebApp.Controllers
                 var latestAppointments = await _context.Appointments
                     .Where(a => a.DoctorId == user.Id && a.Status == "UpComing")
                     .Include(a => a.Patient)
-                    .OrderByDescending(a => a.AppointmentDate)
+                    .OrderBy(a => a.AppointmentDate)
                     .Take(5)
                     .ToListAsync();
 
@@ -66,14 +67,24 @@ namespace AppointmentWebApp.Controllers
                     .ToListAsync();
 
                 var totalIncome = await _context.Transactions
-        .Where(t => t.Appointment.PatientId == user.Id && t.Appointment.IsPaid == true)
-        .SumAsync(t => t.Amount);
+                    .Where(t => t.Appointment.PatientId == user.Id && t.Appointment.IsPaid == true)
+                    .SumAsync(t => t.Amount);
+                var today = DateTime.Today;
 
-                var lastAppointment = allAppointments
-                    .Where(a=> a.PatientId == user.Id && a.Status == "Completed" )
+                var CompleteAppointments = await _context.Appointments
+                    .Where(a=>a.PatientId == user.Id)
+                    .Include(a => a.Doctor)
+                    .OrderBy(a => a.AppointmentDate) .ToListAsync();
+
+                var lastAppointment = CompleteAppointments
+                    .Where(a=>a.Status == "Completed")
                     .OrderByDescending(a => a.AppointmentDate)
                     .FirstOrDefault();
 
+                if (lastAppointment == null)
+                {
+                    _logger.LogInformation($"Last Appointment ID is null");
+                }
                 ViewBag.Patient = user;  // Pass the patient (ApplicationUser)
                 ViewBag.LastAppointment = lastAppointment;
                 ViewBag.AllAppointments = allAppointments;
