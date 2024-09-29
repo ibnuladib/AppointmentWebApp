@@ -73,7 +73,7 @@ The `appsettings.json` file is a configuration file used in ASP.NET Core applica
     "LogLevel": {
       "Default": "Information",
       "Microsoft.AspNetCore": "Warning"
-    }
+
   }
     ```
 - **Application Settings**: You can add custom settings for your application, such as feature flags or external service configurations.
@@ -98,6 +98,11 @@ To get a copy of the project up and running on your local machine for developmen
     dotnet restore
     ```
 3. Update the connection string in the `appsettings.json` file to match your database configuration.
+    ```json
+    "ConnectionStrings": {
+    "ApplicationDbContextConnection": "Server=(localdb)\\mssqllocaldb;Database=AppointmentWebAppDemo;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True"
+  }
+    ```
 4. Apply the database migrations:
 
     **Using .NET CLI:**
@@ -132,7 +137,6 @@ To get a copy of the project up and running on your local machine for developmen
 ## Contributing
 
 Contributions are welcome! If you have suggestions for improvements or new features, please fork the repository and submit a pull request.
-
 ## Acknowledgements
 
 - Thanks to the contributors and the community for their support.
