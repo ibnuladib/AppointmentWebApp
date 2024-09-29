@@ -2,6 +2,17 @@
 
 Welcome to Baymax Care, a comprehensive doctor's appointment system designed to facilitate seamless interactions between patients and healthcare providers. Our application streamlines the appointment scheduling process, ensuring that patients have easy access to medical care while allowing doctors to manage their schedules effectively.
 
+## CaseStudy
+In our country, the healthcare system is quite inefficient as it wastes time as at times patients need to come to the clinic or hospital to book an appointment and wait for it, in other scenarios it also wastes resources too as clerks are needed to manage appointments, including making calls or receiving calls in queries to doctors or appointments. So, our goal was to make the process entirely online and make booking more efficient by reducing the time, effort and resources it takes to book an appointment. 
+
+In our system, Patients can sign up with all their necessary details and are authenticated using their email address. They can give their past medical records and details and update their profile. They can search for doctors and see their past reviews. Once they find the one they want to book an appointment with. They can then create an appointment at the available time slots. A transaction responding to the appointment will be created. The Patient can view the transaction and pay it. The doctor will receive a notification concerning the Appointment and can prepare for it via looking through the Patient’s medical history. 
+An Administrator will manage all records of Patients, Doctors and Reviews to moderate through it when deemed necessary. 
+All these actions will be done through a user-friendly interface. 
+
+##Technoloy Used
+- **C#
+- **.NET
+ 
 ## Features
 
 ### 1. Patient Booking System
