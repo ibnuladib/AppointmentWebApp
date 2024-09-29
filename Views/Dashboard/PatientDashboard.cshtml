@@ -181,22 +181,24 @@
                 </div>
                     <!-- List of All Appointments -->
                     <div class="appointments-list">
-                        <h3>Appointments</h3>
+                        <h3>Upcoming Appointments</h3>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Date</th>
                                     <th>Doctor</th>
                                     <th>Symptoms</th>
+                                    <th>Billing Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var appointment in ViewBag.AllAppointments)
                                 {
                                     <tr>
-                                        <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
+                                        <td>@appointment.AppointmentDate.ToString("g")</td>
                                         <td>@appointment.Doctor.FirstName @appointment.Doctor.LastName</td>
                                         <td>@appointment.Symptoms</td>
+                                        <td>@appointment.Amount</td>
                                     </tr>
                                 }
                             </tbody>
