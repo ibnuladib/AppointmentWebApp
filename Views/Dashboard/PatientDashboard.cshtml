@@ -152,54 +152,60 @@
 </head>
 <body>
 <div class="dashboard">
-    <h2>Patient Dashboard</h2>
+        <h2>Welcome, @ViewBag.Patient.FirstName @ViewBag.Patient.LastName</h2>
 
-    <!-- Patient Details -->
-    <div class="patient-details">
-        <h3>Patient Details</h3>
-        <p><strong>Name:</strong> @ViewBag.Patient.FirstName @ViewBag.Patient.LastName</p>
-        <p><strong>Blood Group:</strong> @ViewBag.Patient.BloodGroup</p>
-        <p><strong>Medical History:</strong> @ViewBag.Patient.MedicalHistory</p>
-    </div>
-
-    <!-- Last Appointment Details -->
-    <div class="last-appointment">
-        <h3>Last Appointment</h3>
-        @if (ViewBag.LastAppointment != null)
-        {
-            <p><strong>Date:</strong> @ViewBag.LastAppointment.AppointmentDate.ToString("dd/MM/yyyy")</p>
-            <p><strong>Doctor:</strong> @ViewBag.LastAppointment.Doctor.FirstName @ViewBag.LastAppointment.Doctor.LastName</p>
-            <p><strong>Symptoms:</strong> @ViewBag.LastAppointment.Symptoms</p>
-        }
-        else
-        {
-            <p>No previous appointments found.</p>
-        }
-    </div>
-
-    <!-- List of All Appointments -->
-    <div class="appointments-list">
-        <h3>Appointments</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Doctor</th>
-                    <th>Symptoms</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var appointment in ViewBag.AllAppointments)
-                {
-                    <tr>
-                        <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
-                        <td>@appointment.Doctor.FirstName @appointment.Doctor.LastName</td>
-                        <td>@appointment.Symptoms</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="patient-details">
+                        <h3>Patient Details</h3>
+                        <p><strong>Name:</strong> @ViewBag.Patient.FirstName @ViewBag.Patient.LastName</p>
+                        <p><strong>Blood Group:</strong> @ViewBag.Patient.BloodGroup</p>
+                        <p><strong>Medical History:</strong> @ViewBag.Patient.MedicalHistory</p>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="last-appointment">
+                        <h3>Last Appointment</h3>
+                        @if (ViewBag.LastAppointment != null)
+                        {
+                            <p><strong>Date:</strong> @ViewBag.LastAppointment.AppointmentDate.ToString("dd/MM/yyyy")</p>
+                            <p><strong>Doctor:</strong> @ViewBag.LastAppointment.Doctor.FirstName @ViewBag.LastAppointment.Doctor.LastName</p>
+                            <p><strong>Symptoms:</strong> @ViewBag.LastAppointment.Symptoms</p>
+                        }
+                        else
+                        {
+                            <p>No previous appointments found.</p>
+                        }
+                    </div>
+                </div>
+                    <!-- List of All Appointments -->
+                    <div class="appointments-list">
+                        <h3>Appointments</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Doctor</th>
+                                    <th>Symptoms</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var appointment in ViewBag.AllAppointments)
+                                {
+                                    <tr>
+                                        <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
+                                        <td>@appointment.Doctor.FirstName @appointment.Doctor.LastName</td>
+                                        <td>@appointment.Symptoms</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
 </div>
 
 <footer>
