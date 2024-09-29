@@ -2,69 +2,89 @@
 
 @{
     ViewData["Title"] = "Create";
-    var name = Model.Doctor.FirstName +" "+ Model.Doctor.LastName;
+    var name = Model.Doctor.FirstName + " " + Model.Doctor.LastName;
     var name2 = Model.Patient.FirstName + " " + Model.Patient.LastName;
+    var today = DateTime.Today.ToString("yyyy-MM-dd");
+    var nextWeek = DateTime.Today.AddDays(5).ToString("yyyy-MM-dd"); // Limit to the next 5 days
 }
 
 <h1>Create Appointment</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" method="post">
+        <!-- Remove method="post" to use AJAX submission instead -->
+        <form id="createAppointmentForm">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <input asp-for="DoctorId" class="form-control" value="@Model.DoctorId" readonly />
+                <input asp-for="DoctorId" class="form-control" value="@Model.DoctorId" id="DoctorId" readonly />
                 <span asp-validation-for="DoctorId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <div class="form-control-plaintext">
-                    <strong> Doctor Name :</strong> @name
+                    <strong>Doctor Name:</strong> @name
                 </div>
             </div>
             <div class="form-group">
-                <input asp-for="PatientId" class="form-control" value="@Model.PatientId" readonly />
+                <input asp-for="PatientId" class="form-control" value="@Model.PatientId" id="PatientId" readonly />
                 <span asp-validation-for="PatientId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <div class="form-control-plaintext">
-                    <strong> Patient Name :</strong> @name2
+                    <strong>Patient Name:</strong> @name2
                 </div>
             </div>
 
             <div class="form-group">
                 <div>
-                    <strong> Set Appointment Date:</strong>
+                    <strong>Set Appointment Date:</strong>
                 </div>
-                <input asp-for="AppointmentDate" class="form-control" />
-                <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                <input asp-for="DateOfAppointment" class="form-control" id="appointmentDate"
+                       type="date" min="@today" max="@nextWeek" />
+            </div>
+
+            <div class="form-group">
+                <label for="AvailableTimes"><strong>Available Times:</strong></label>
+                <select id="AvailableTimes" class="form-control">
+                    <option value="">Select a time</option>
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <span asp-validation-for="StartTime" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <div>
-                    <strong>Symptoms:</strong>
+                    <strong>Selected Start Time:</strong>
                 </div>
-                <input asp-for="Symptoms" class="form-control" />
+                <input type="text" class="form-control" id="startTimeDisplay" readonly />
+                <input type="hidden" name="StartTime" id="startTimeInput" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <strong>Symptoms</strong>
+                </div>
+                <input asp-for="Symptoms" class="form-control" id="Symptoms" />
                 <span asp-validation-for="Symptoms" class="text-danger"></span>
             </div>
-
-@*             <div class="form-group">
-                <label asp-for="IsPaid" class="control-label"></label>
-                <input asp-for="IsPaid" type="checkbox" class="form-check-input" />
-                <span asp-validation-for="IsPaid" class="text-danger"></span>
-            </div> *@
+            <div>
+                <input type="hidden" id="dateOfAppointmentInput" name="DateOfAppointment" />
+            </div>
 
             <div class="form-group">
                 <div>
-                    <strong>Charge per Hour: </strong>
+                    <strong>Total Amount:</strong>
                 </div>
-                <input asp-for="Amount" class="form-control" value="@Model.Amount" readonly />
+                <input asp-for="Amount" class="form-control" id="totalAmount" value="@Model.Amount" />
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary mt-3" />
+                <button type="button" id="submitButton" class="btn btn-primary mt-3">Create</button>
             </div>
+          
         </form>
     </div>
 </div>
@@ -77,4 +97,108 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var dateInput = $('#appointmentDate');
+            var availableTimesInput = $('#AvailableTimes');
+            var startTimeInput = $('#startTimeInput');
+            var startTimeDisplay = $('#startTimeDisplay');
+            var dateOfAppointmentInput = $('#dateOfAppointmentInput');
+            // Fetch available times for the selected date
+            function fetchAvailableTimes() {
+                var selectedDate = dateInput.val();
+                var doctorId = $('#DoctorId').val();
+
+                if (selectedDate) {
+                    $.ajax({
+                        url: '@Url.Action("GetAvailableTimes", "Appointments")',
+                        type: 'GET',
+                        data: {
+                            appointmentDate: selectedDate,
+                            doctorId: doctorId
+                        },
+                        success: function (data) {
+                            availableTimesInput.empty();
+                            if (data.length > 0) {
+                                $.each(data, function (index, timeString) {
+                                    availableTimesInput.append($('<option></option>').val(timeString).html(timeString));
+                                });
+                            } else {
+                                availableTimesInput.append('<option>No available times</option>');
+                            }
+                        },
+                        error: function () {
+                            alert('Error retrieving times');
+                        }
+                    });
+                } else {
+                    availableTimesInput.empty();
+                    availableTimesInput.append('<option>Select a date first</option>');
+                }
+            }
+
+            // Update start time display and hidden input when a time is selected
+            availableTimesInput.change(function () {
+                var selectedTime = availableTimesInput.val();
+                var selectedDate = dateInput.val();
+
+                if (selectedTime && selectedDate) {
+                    var appointmentDate = new Date(selectedDate);
+                    var timeParts = selectedTime.split(' ');
+                    var time = timeParts[0].split(':');
+                    var hours = parseInt(time[0]);
+                    var minutes = parseInt(time[1]);
+
+                    if (timeParts[1] === 'PM' && hours !== 12) hours += 12;
+                    if (timeParts[1] === 'AM' && hours === 12) hours = 0;
+
+                    appointmentDate.setHours(hours, minutes);
+
+                    // Format DateOfAppointment (date only)
+                    var formattedDate = appointmentDate.toISOString().split('T')[0];
+                    dateOfAppointmentInput.val(formattedDate);
+
+                    // Format StartTime (time only, as TimeSpan)
+                    var timeSpan = String(hours).padStart(2, '0') + ':' +
+                        String(minutes).padStart(2, '0') + ':00';
+                    startTimeInput.val(timeSpan);
+
+                    // Update display (optional)
+                    startTimeDisplay.val(appointmentDate.toLocaleString('en-GB', { hour12: false }));
+                }
+            });
+
+            // Handle Create button click
+            $('#submitButton').click(function () {
+                var appointmentData = {
+                    DoctorId: $('#DoctorId').val(),
+                    PatientId: $('#PatientId').val(),
+                    DateOfAppointment: dateOfAppointmentInput.val(),
+                    StartTime: startTimeInput.val(),
+                    Symptoms: $('#Symptoms').val(),
+                    Amount: $('#totalAmount').val(),
+                };
+
+                $.ajax({
+                    url: '@Url.Action("CreateNew", "Appointments")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(appointmentData),
+                    success: function (response) {
+                        alert('Appointment created successfully!');
+                        window.location.href = '@Url.Action("Index", "Appointments")';
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Failed to create appointment.');
+                    }
+                });
+            });
+
+            dateInput.change(function () {
+                fetchAvailableTimes();
+            });
+        });
+    </script>
 }

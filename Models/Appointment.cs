@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AppointmentWebApp.Enums;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppointmentWebApp.Models
 {
@@ -7,31 +10,34 @@ namespace AppointmentWebApp.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public string PatientId { get; set; }
-        public virtual ApplicationUser? Patient { get; set; }
-        [Required]
-        public string DoctorId { get; set; }
-        public ApplicationUser? Doctor { get; set; }
-        [Required]
-        public string Status { get; set; }
-        [Required]
-        public DateTime AppointmentDate { get; set; }
+        public string PatientId { get; set; } // Foreign key for Patient
+        public  ApplicationUser? Patient { get; set; }
 
-        [Required]
-        public TimeSpan AppointmentDuration { get; set; }
-        [Required]
-        public string Symptoms { get; set; }
-        [Required]
-        public bool IsPaid { get; set; }
-        public decimal Amount { get; set; }
+        public string DoctorId { get; set; } // Foreign key for Doctor
+        public  ApplicationUser? Doctor { get; set; }
 
- //      public DateTime? AppointmentCreated { get; set; } = DateTime.Now;
+        [StringLength(20)]
+        public string Status { get; set; } = "Upcoming";
 
-        public Appointment() {
-            Status = "UpComing";
-            IsPaid = false;
-        }
+        public DateOnly DateOfAppointment { get; set; }
+        public TimeSpan StartTime { get; set; }
+
+        public DateTime AppointmentDate { get; set; } 
+
+        [StringLength(255)]
+        public string Symptoms { get; set; } // Optional symptom details
+
+        public bool IsPaid { get; set; } = false; // Payment status of the appointment
+
+        [Range(0, 10000)]
+        public decimal Amount { get; set; } // Appointment cost
+
+        public DoctorShift DoctorShift { get; set; } 
+
+        public DateTime AppointmentCreated { get; set; } = DateTime.Now; 
+
+
+
 
     }
 }
