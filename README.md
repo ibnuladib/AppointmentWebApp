@@ -91,7 +91,7 @@ To get a copy of the project up and running on your local machine for developmen
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/baymax-care.git
+    git clone [https://github.com/yourusername/baymax-care.git](https://github.com/ibnuladib/AppointmentWebApp.git)
     cd baymax-care
     ```
 2. Restore the dependencies:
