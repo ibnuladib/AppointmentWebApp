@@ -3,6 +3,10 @@
     Layout = null;
 }
 -->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Doctor Dasboard";
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -168,6 +172,8 @@
 <body>
 <div class="dashboard">
     <h2>Welcome, Dr. @ViewBag.Doctor.FirstName @ViewBag.Doctor.LastName</h2>
+
+
 
     <!-- Statistics Section -->
     <div class="dashboard-statistics">
