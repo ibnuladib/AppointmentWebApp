@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <style>
@@ -31,14 +32,6 @@
             font-weight: 700;
         }
 
-        /* Subtitle or tagline for the header */
-        header p {
-            font-size: 18px;
-            font-weight: 300;
-            margin-top: 10px;
-            letter-spacing: 1px;
-        }
-
         /* Navigation bar inside the header */
         nav {
             background-color: #005a92;
@@ -59,6 +52,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: color 0.3s ease;
+            font-size: 16px; /* Match font size */
         }
 
         /* Hover effect for navigation links */
@@ -137,19 +131,26 @@
         footer p {
             margin: 0;
         }
+
+        /* Logout button styling */
+        .logout-button {
+            background: none;
+            border: none;
+            padding: 0;
+            color: white;
+            cursor: pointer;
+            font-size: 16px; /* Match font size */
+            margin-left: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            color: #9ed2f2;
+            text-shadow: 0 0 10px rgba(158, 210, 242, 0.7);
+        }
     </style>
 </head>
 <body>
-<header>
-    <h1>Welcome to Healthcare Services</h1>
-</header>
-
-<nav>
-    <a class="link_color_change" href="@Url.Page("/Account/Login", new { area = "Identity" })">Log in</a>
-    <a class="link_color_change" href="@Url.Page("/Account/Register", new { area = "Identity" })">Register</a>
-    <a class="link_color_change" href="#contact">Contact</a>
-</nav>
-
 <div class="dashboard">
     <h2>Patient Dashboard</h2>
 

@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿<!--@{
+    ViewData["Title"] = "Baymax Care Doctor Dashboard";
+    Layout = null;
+}
+-->
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <style>
@@ -161,16 +166,6 @@
     </style>
 </head>
 <body>
-<header>
-    <h1>Welcome to Healthcare Services</h1>
-</header>
-
-<nav>
-    <a class="link_color_change" href="@Url.Page("/Account/Login", new { area = "Identity" })">Log in</a>
-    <a class="link_color_change" href="@Url.Page("/Account/Register", new { area = "Identity" })">Register</a>
-    <a class="link_color_change" href="#contact">Contact</a>
-</nav>
-
 <div class="dashboard">
     <h2>Welcome, Dr. @ViewBag.Doctor.FirstName @ViewBag.Doctor.LastName</h2>
 
