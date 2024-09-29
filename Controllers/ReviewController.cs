@@ -126,10 +126,8 @@ namespace AppointmentWebApp.Controllers
         {
             var reviews = _context.Reviews.Include(r => r.Doctor).Include(r => r.Patient).AsQueryable();
 
-            // Role-based filtering
             if (User.IsInRole("Patient"))
             {
-                // Patients can only see their own reviews
                 var patientId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 reviews = reviews.Where(r => r.PatientId == patientId);
             }

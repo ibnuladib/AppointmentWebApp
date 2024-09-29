@@ -21,6 +21,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<AppointmentService>();
+builder.Services.AddScoped<AppointmentSlotService>();
 
 builder.Services.AddHostedService<AppointmentCheckerService>();
 

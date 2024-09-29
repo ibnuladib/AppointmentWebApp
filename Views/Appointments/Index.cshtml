@@ -83,10 +83,16 @@
                 @Html.DisplayFor(modelItem => item.Amount)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id" >GoToTransaction</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning mt-2">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+
+
+                        }
+                        <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id" class="btn btn-success">GoToTransaction</a>
+
             </td>
         </tr>
 }
@@ -154,12 +160,7 @@ else if(User.IsInRole("Patient"))
                         @Html.DisplayFor(modelItem => item.Amount)
                     </td>
                     <td>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary mt-2">Edit</a>
-                        }
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                         <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id">GoToTransaction</a>
                     </td>
                 </tr>
@@ -228,9 +229,7 @@ else
                         @Html.DisplayFor(modelItem => item.Amount)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                         <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id">GoToTransaction</a>
                     </td>
                 </tr>

@@ -1,5 +1,7 @@
 ﻿using AppointmentWebApp.Data;
+using AppointmentWebApp.Migrations;
 using AppointmentWebApp.Models;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -21,6 +23,8 @@ namespace AppointmentWebApp.Services
             var patient = await _context.Users.FindAsync(appointment.PatientId);
             var doctor = await _context.Users.FindAsync(appointment.DoctorId);
 
+            DateTime appointmentDateTime = appointment.DateOfAppointment.ToDateTime(TimeOnly.MinValue).Add(appointment.StartTime);
+
             if (patient == null || doctor == null)
             {
                 throw new ArgumentException("Patient or Doctor not found.");
@@ -28,7 +32,8 @@ namespace AppointmentWebApp.Services
             appointment.Patient = patient;
             appointment.Doctor = doctor;
             appointment.IsPaid = false;
-
+            appointment.AppointmentCreated = DateTime.Now;
+            appointment.AppointmentDate = appointmentDateTime;
             try
             {
                 _context.Appointments.Add(appointment);

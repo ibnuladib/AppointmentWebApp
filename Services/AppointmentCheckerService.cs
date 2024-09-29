@@ -45,7 +45,7 @@ namespace AppointmentWebApp.Services
 
                         // Filter ended appointments in memory
                         var endedAppointments = incompleteAppointments
-                            .Where(a => a.AppointmentDate.AddMinutes(a.AppointmentDuration.TotalMinutes) <= timenow)
+                            .Where(a => a.AppointmentDate.AddHours(1) <= timenow)
                             .ToList();
 
                         foreach (var appointment in endedAppointments)
