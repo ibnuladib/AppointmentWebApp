@@ -158,6 +158,19 @@ To get a copy of the project up and running on your local machine for developmen
 - **For Patients**: Register or log in, then navigate to the "Search" section to find doctors and book appointments. Review your appointment history and leave feedback for your doctors.
 - **For Doctors**: Log in to your account to view your appointment schedule, manage your availability, and respond to patient reviews. Track your performance and earnings through the analytics dashboard.
 
+## Screenshots
+![image](https://github.com/user-attachments/assets/508b7561-f5b4-4dc7-93c0-fa2416421df8)
+![image](https://github.com/user-attachments/assets/ba5780ee-ed53-47b0-bf0c-5859db276d31)
+![image](https://github.com/user-attachments/assets/1a279b1b-9d9c-426b-a05b-17ccc84b6c67)
+![image](https://github.com/user-attachments/assets/b548d193-9dcf-48fc-8aaf-23f1fa6dc170)
+![image](https://github.com/user-attachments/assets/734a3bd1-0920-41d6-a88c-47eaae4227aa)
+![image](https://github.com/user-attachments/assets/440425b2-5bb2-4afb-af49-4199a8c708c5)
+![image](https://github.com/user-attachments/assets/52723d7c-ed30-4280-8da2-a60badf3c178)
+![image](https://github.com/user-attachments/assets/bfb19be9-91ca-4032-a9e0-6dc16cff360c)
+
+
+
+
 ## Contributing
 
 Contributions are welcome! If you have suggestions for improvements or new features, please fork the repository and submit a pull request.
