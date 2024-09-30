@@ -1,6 +1,6 @@
 # Baymax Care
 
-Welcome to Baymax Care, a comprehensive doctor's appointment system designed to facilitate seamless interactions between patients and healthcare providers. Our application streamlines the appointment scheduling process, ensuring that patients have easy access to medical care while allowing doctors to manage their schedules effectively.
+Welcome to Baymax Care, a comprehensive doctor's appointment system designed to facilitate seamless interactions between patients and healthcare providers. Our application streamlines the appointment scheduling process, ensuring that patients have easy access to medical care while allowing doctors to manage their schedules effectively.</br>
 Demonstration video: https://www.youtube.com/watch?v=tRVjEe338gE
 
 ## CaseStudy
