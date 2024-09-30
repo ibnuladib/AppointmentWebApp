@@ -9,7 +9,7 @@ In our system, Patients can sign up with all their necessary details and are aut
 An Administrator will manage all records of Patients, Doctors and Reviews to moderate through it when deemed necessary. 
 All these actions will be done through a user-friendly interface. 
 
-##Technoloy Used
+## Technoloy Used
 - C#
 - ASP.NET CORE MVC
 - Libraries: Identity, Signal R
