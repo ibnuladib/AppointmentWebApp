@@ -120,7 +120,7 @@ To get a copy of the project up and running on your local machine for developmen
     ```json
     "ConnectionStrings": {
     "ApplicationDbContextConnection": "Server=(localdb)\\mssqllocaldb;Database=AppointmentWebAppDemo;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True"
-  }
+    }
     ```
 4. Apply the database migrations:
 
