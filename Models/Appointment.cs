@@ -10,10 +10,10 @@ namespace AppointmentWebApp.Models
     {
         [Key]
         public int Id { get; set; }
-        public string PatientId { get; set; } // Foreign key for Patient
+        public string? PatientId { get; set; } // Foreign key for Patient
         public  ApplicationUser? Patient { get; set; }
 
-        public string DoctorId { get; set; } // Foreign key for Doctor
+        public string? DoctorId { get; set; } // Foreign key for Doctor
         public  ApplicationUser? Doctor { get; set; }
 
         [StringLength(20)]

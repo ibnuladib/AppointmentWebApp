@@ -32,13 +32,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Patient).WithMany().HasForeignKey(a => a.PatientId)  // Each ApplicationUser will have many appointments
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Doctor)
             .WithMany()  // Each ApplicationUser will have many appointments
             .HasForeignKey(a => a.DoctorId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Review>()
             .HasKey(r => r.ReviewId);

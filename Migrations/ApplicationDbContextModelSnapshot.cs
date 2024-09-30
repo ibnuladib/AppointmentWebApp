@@ -171,7 +171,6 @@ namespace AppointmentWebApp.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("DoctorId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("DoctorShift")
@@ -181,7 +180,6 @@ namespace AppointmentWebApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PatientId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<TimeSpan>("StartTime")
@@ -424,14 +422,12 @@ namespace AppointmentWebApp.Migrations
                     b.HasOne("AppointmentWebApp.Models.ApplicationUser", "Doctor")
                         .WithMany()
                         .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("AppointmentWebApp.Models.ApplicationUser", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Doctor");
 
