@@ -167,6 +167,7 @@ To get a copy of the project up and running on your local machine for developmen
 ![image](https://github.com/user-attachments/assets/440425b2-5bb2-4afb-af49-4199a8c708c5)
 ![image](https://github.com/user-attachments/assets/52723d7c-ed30-4280-8da2-a60badf3c178)
 ![image](https://github.com/user-attachments/assets/bfb19be9-91ca-4032-a9e0-6dc16cff360c)
+![image](https://github.com/user-attachments/assets/d0b12fe2-076e-469a-a286-442badacc028)
 
 
 
