@@ -139,9 +139,10 @@ To get a copy of the project up and running on your local machine for developmen
     3. Run the following command to update the database:
         ```powershell
         Update-Database
+
     
-    **SQL Script**
-    -There is also a SQL script file given in the folder SQL, with which you can initialize the local database
+    **SQL Script:**
+    There is also a SQL script file given in the folder SQL, with which you can initialize the local database
 
 5. Run the application:
     ```bash
