@@ -129,6 +129,8 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+    @if (User.IsInRole("Patient"))
+    {
     <button class="make-payment-btn" onclick="openPopup()">Make Payment</button>
     <div id="popup-bg" class="popup-bg">
         <div class="popup">
@@ -172,13 +174,15 @@
 
                 <div>
 
-                    <button class="submit-btn" type="submit" onclick="submitPayment(event)">Submit Payment</button>
-                    <button class="close-btn" onclick="closePopup()">Exit</button>
+                        <button class="submit-btn" type="submit" onclick="submitPayment(event)">Submit Payment</button>
+                        <button class="close-btn" onclick="closePopup()">Exit</button>
+                    
                 </div>
             </form>
-        </div>
+            </div>
+                    
     </div>
-
+                    }
     <div id="success-bg" class="success-bg">
         <div class="success-popup">
             <h2>Payment Successful!</h2>

@@ -52,7 +52,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Amount)
             </th>
-            <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -79,19 +84,22 @@
             <td>
                 @Html.DisplayFor(modelItem => item.IsPaid)
             </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)
             </td>
             <td>
                         @if (User.IsInRole("Admin"))
                         {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning mt-2">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
-
-
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning mt-2">Edit</a>      <!-- Yellow Button for Edit -->
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger mt-2">Delete</a>    <!-- Red Button for Delete -->
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary mt-2">Details</a> <!-- Blue Button for Details -->
                         }
-                        <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id" class="btn btn-success">GoToTransaction</a>
+
+                        <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id" class="btn btn-success mt-2">GoToTransaction</a> <!-- Green Button for GoToTransaction -->
+
 
             </td>
         </tr>
@@ -105,13 +113,7 @@ else if(User.IsInRole("Patient"))
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.PatientId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Patient)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DoctorId)
+                    @Html.DisplayNameFor(model => model.Id)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Doctor)
@@ -128,7 +130,9 @@ else if(User.IsInRole("Patient"))
                 <th>
                     @Html.DisplayNameFor(model => model.Amount)
                 </th>
-                <th></th>
+                <th>
+                    Actions
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -136,16 +140,11 @@ else if(User.IsInRole("Patient"))
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Patient.Id)
+                        @Html.DisplayFor(modelItem => item.Id)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Patient.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.Email)
+                        @Html.DisplayFor(modelItem => item.Doctor.FirstName)
+                        @Html.DisplayFor(modelItem => item.Doctor.LastName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.AppointmentDate)
@@ -160,8 +159,9 @@ else if(User.IsInRole("Patient"))
                         @Html.DisplayFor(modelItem => item.Amount)
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id">GoToTransaction</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success mt-2">Details</a>  <!-- Green Button -->
+                        <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id" class="btn btn-primary mt-2">View Transaction</a>  <!-- Blue Button -->
+
                     </td>
                 </tr>
             }
@@ -174,16 +174,13 @@ else
         <thead>
             <tr>
                 <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.PatientId)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Patient)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DoctorId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Doctor)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.AppointmentDate)
@@ -197,7 +194,9 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.Amount)
                 </th>
-                <th></th>
+                <th>
+                    Action
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -205,16 +204,13 @@ else
             {
                 <tr>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.Patient.Id)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Patient.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.Email)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.AppointmentDate)
@@ -229,8 +225,9 @@ else
                         @Html.DisplayFor(modelItem => item.Amount)
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id">GoToTransaction</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success mt-2">Details</a>  <!-- Green Button -->
+                        <a asp-action="Details" asp-controller="Transactions" asp-route-id="@item.Id" class="btn btn-primary mt-2">GoToTransaction</a>  <!-- Blue Button -->
+
                     </td>
                 </tr>
             }

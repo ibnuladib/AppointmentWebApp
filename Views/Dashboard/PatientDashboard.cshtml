@@ -3,7 +3,6 @@
 <html lang="en">
 <head>
     <style>
-        /* General body styles for better presentation */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -12,7 +11,6 @@
             color: #333;
         }
 
-        /* Blueish Header */
         header {
             background: linear-gradient(90deg, #0079c2 0%, #004e8c 100%);
             color: white;
@@ -23,7 +21,6 @@
             z-index: 1000;
         }
 
-        /* Styling for the header text */
         header h1 {
             margin: 0;
             font-size: 36px;
@@ -32,18 +29,16 @@
             font-weight: 700;
         }
 
-        /* Navigation bar inside the header */
         nav {
             background-color: #005a92;
             padding: 15px;
             text-align: center;
-            position: sticky;
-            top: 0;
+            position: sticky; 
+            top: 0; 
             z-index: 999;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* Navigation links */
         nav a {
             color: white;
             text-decoration: none;
@@ -52,16 +47,14 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: color 0.3s ease;
-            font-size: 16px; /* Match font size */
+            font-size: 16px; 
         }
 
-        /* Hover effect for navigation links */
         nav a:hover {
             color: #9ed2f2;
             text-shadow: 0 0 10px rgba(158, 210, 242, 0.7);
         }
 
-        /* Responsive styling for smaller screens */
         @@media (max-width: 768px) {
             header h1 {
                 font-size: 28px;
@@ -118,28 +111,13 @@
             color: white;
         }
 
-        footer {
-            background-color: #0079c2;
-            color: white;
-            padding: 30px;
-            text-align: center;
-            margin-top: 40px;
-            font-size: 16px;
-            letter-spacing: 1px;
-        }
-
-        footer p {
-            margin: 0;
-        }
-
-        /* Logout button styling */
         .logout-button {
             background: none;
             border: none;
             padding: 0;
             color: white;
             cursor: pointer;
-            font-size: 16px; /* Match font size */
+            font-size: 16px; 
             margin-left: 20px;
             transition: color 0.3s ease;
         }
@@ -209,10 +187,6 @@
         </div>
     
 </div>
-
-<footer>
-    <p>&copy; 2024 Healthcare Services. All rights reserved.</p>
-</footer>
 
 </body>
 </html>
